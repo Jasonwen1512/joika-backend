@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-  <div></div>
+  <div>檢舉</div>
 </template>
 
 <style scoped lang="scss"></style>
