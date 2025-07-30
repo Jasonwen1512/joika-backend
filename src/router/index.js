@@ -14,9 +14,9 @@ const router = createRouter({
       component: () => import('../views/home.vue'),
     },
     {
-      path: '/manage',
-      name: 'manage',
-      component: () => import('../views/manage.vue'),
+      path: '/activity-manage',
+      name: 'activity-manage',
+      component: () => import('../views/activity-manage.vue'),
     },
     {
       path: '/member',

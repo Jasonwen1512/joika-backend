@@ -4,7 +4,7 @@ import Content from '@/components/content.vue'
 
 <template>
   <div>
-    <Content title="聯絡表單"></Content>
+    <Content title="揪團管理"></Content>
   </div>
 </template>
 

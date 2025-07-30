@@ -58,6 +58,7 @@ const password = ref('')
 </template>
 
 <style scoped lang="scss">
+@use 'sass:color';
 .card {
   border: 1px solid #000;
   border-radius: 0;
@@ -99,19 +100,19 @@ const password = ref('')
 .submit {
   background-color: #81bfda;
   &:hover {
-    background-color: darken($color: #81bfda, $amount: 10%);
+    background-color: color.adjust(#81bfda, $lightness: -10%);
   }
   &:active {
-    background-color: darken($color: #81bfda, $amount: 15%);
+    background-color: color.adjust(#81bfda, $lightness: -15%);
   }
 }
 .signup {
   background-color: #f1d376;
   &:hover {
-    background-color: darken($color: #f1d376, $amount: 10%);
+    background-color: color.adjust(#f1d376, $lightness: -10%);
   }
   &:active {
-    background-color: darken($color: #f1d376, $amount: 15%);
+    background-color: color.adjust(#f1d376, $lightness: -15%);
   }
 }
 .bg1,

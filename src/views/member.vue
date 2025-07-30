@@ -1,7 +1,11 @@
-<script setup></script>
+<script setup>
+import Content from '@/components/content.vue'
+</script>
 
 <template>
-  <div>會員管理</div>
+  <div>
+    <Content title="會員管理"></Content>
+  </div>
 </template>
 
 <style scoped lang="scss"></style>
