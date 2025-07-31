@@ -20,7 +20,10 @@ const searchQuery = ref('')
   <div class="mark-title text-center p-2 m-5 position-relative" id="title">
     {{ title }}
   </div>
-  <div class="input-area input-group me-5 position-absolute end-0 top-0">
+  <div
+    class="input-area input-group me-5 position-absolute end-0 top-0"
+    v-if="title !== '後台首頁'"
+  >
     <input type="text" class="form-control" placeholder="請輸入姓名或ID" v-model="searchQuery" />
     <button class="btn btn-outline-secondary" @click="doSearch">
       <FontAwesomeIcon :icon="['fas', 'search']" />
