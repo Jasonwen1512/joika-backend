@@ -22,7 +22,7 @@ body {
   background-color: #f7f6f1;
 }
 .n-banner {
-  width: 85%;
+  flex: 1;
 }
 .page-wrapper {
   height: 100vh;

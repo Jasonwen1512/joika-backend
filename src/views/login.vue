@@ -1,8 +1,28 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const username = ref('')
 const password = ref('')
+
+// 測試用帳號密碼
+const fakeAccount = {
+  username: 'joika',
+  password: '123456',
+}
+
+const onLogin = () => {
+  if (username.value === fakeAccount.username && password.value === fakeAccount.password) {
+    console.log('登入成功')
+    router.push('/home')
+  } else {
+    alert('帳號或密碼錯誤')
+    username.value = ''
+    password.value = ''
+  }
+}
 
 // const a = () => {
 //   console.log(username.value, password.value)

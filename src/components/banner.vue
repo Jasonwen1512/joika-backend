@@ -44,24 +44,38 @@
   }
 }
 .banner {
-  width: 15%;
+  width: 200px;
   background-color: #4f8da8;
   height: 100vh;
   position: relative;
+
   ul {
     font-size: 24px;
+
     li {
       width: 100%;
       text-align: center;
+
       &:hover {
-        background-color: #fff;
+        background-color: #f7f6f1;
+
         a {
           color: #4f8da8;
         }
       }
+
+      // ✅ 新增這段：當前路由對應時自動套用樣式
+      .router-link-active {
+        background-color: #f7f6f1;
+        color: #4f8da8;
+      }
     }
+
     a {
-      color: #fff;
+      color: #f7f6f1;
+      display: block;
+      padding: 12px 0;
+      text-decoration: none;
     }
   }
 }
