@@ -1,14 +1,23 @@
 <script setup>
 import Content from '@/components/bar.vue'
 import Tab from '@/components/tab.vue'
-import { activitys as rawActivitys } from '@/assets/data/data'
-import { ref, computed } from 'vue'
+import { useStore } from '@/stores/data'
+import { ref, computed, onMounted } from 'vue'
 
 const tabs = [{ title: '全部' }, { title: '待審核' }]
 
-const activity = ref([...rawActivitys])
+const store = useStore()
 
-const pendingActivitys = computed(() => activity.value.filter((item) => item.status === '待審核'))
+onMounted(() => {
+  store.fetchActivitys()
+})
+
+const activitys = computed(() => {
+  if (store.filter.length) return store.filter
+  else return store.activitys
+})
+
+const pendingActivitys = computed(() => activitys.value.filter((item) => item.status === '待審核'))
 </script>
 
 <template>
@@ -32,7 +41,7 @@ const pendingActivitys = computed(() => activity.value.filter((item) => item.sta
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, index) in activity" :key="index">
+                  <tr v-for="(item, index) in activitys" :key="index">
                     <td>{{ item.no }}</td>
                     <td>{{ item.date }}</td>
                     <td>{{ item.name }}</td>

@@ -1,21 +1,19 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from '@/stores/data'
 
 const router = useRouter()
 
 const username = ref('')
 const password = ref('')
 
-// 測試用帳號密碼
-const fakeAccount = {
-  username: 'joika',
-  password: '123456',
-}
+const store = useStore()
 
 const onLogin = () => {
-  if (username.value === fakeAccount.username && password.value === fakeAccount.password) {
-    console.log('登入成功')
+  const success = store.login(username.value, password.value)
+  if (success) {
+    console.log(`登入成功，使用者${store.currentUser}`)
     router.push('/home')
   } else {
     alert('帳號或密碼錯誤')
@@ -23,6 +21,29 @@ const onLogin = () => {
     password.value = ''
   }
 }
+
+// const onLogin = () => {
+//   let isOK = false
+//   loginData.forEach((item) => {
+//     if (username.value === item.username && password.value === item.password) {
+//       console.log('登入成功')
+//       isOK = true
+//     }
+//     if (isOK) router.push('/home')
+//     else {
+//       alert('帳號或密碼錯誤')
+//       username.value = ''
+//       password.value = ''
+//     }
+//   })
+
+// if (username.value === fakeAccount.username && password.value === fakeAccount.password) {
+//
+// } else {
+//   alert('帳號或密碼錯誤')
+//   username.value = ''
+//   password.value = ''
+// }
 
 // const a = () => {
 //   console.log(username.value, password.value)

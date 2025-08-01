@@ -1,12 +1,21 @@
 <script setup>
 import Content from '@/components/bar.vue'
 import Tab from '@/components/tab.vue'
-import { contacts as rawConTacts } from '@/assets/data/data'
-import { ref, computed } from 'vue'
+import { useStore } from '@/stores/data'
+import { ref, computed, onMounted } from 'vue'
 
 const tabs = [{ title: '全部' }, { title: '待處理' }]
 
-const contacts = ref([...rawConTacts])
+const store = useStore()
+
+onMounted(() => {
+  store.fetchContacts()
+})
+
+const contacts = computed(() => {
+  if (store.filter.length) return store.filter
+  else return store.contacts
+})
 
 const pendingcontacts = computed(() => contacts.value.filter((item) => item.status === '待處理'))
 

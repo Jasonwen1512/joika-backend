@@ -23,12 +23,14 @@
         <router-link to="/contact-form" class="nav-link">聯絡表單</router-link>
       </li>
     </ul>
-    <button
-      type="button"
-      class="logout btn btn-danger position-absolute pt-2 pb-2 ps-4 pe-4 start-50 translate-middle-x"
+    <router-link to="/"
+      ><button
+        type="button"
+        class="logout btn btn-danger position-absolute pt-2 pb-2 ps-4 pe-4 start-50 translate-middle-x"
+      >
+        登出
+      </button></router-link
     >
-      登出
-    </button>
   </div>
 </template>
 

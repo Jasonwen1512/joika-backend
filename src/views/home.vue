@@ -1,5 +1,10 @@
 <script setup>
 import Content from '@/components/bar.vue'
+import { useStore } from '@/stores/data'
+
+const store = useStore()
+
+const currentUser = store.currentUser || '訪客'
 </script>
 
 <template>
@@ -8,7 +13,7 @@ import Content from '@/components/bar.vue'
       <div
         class="welcome-back d-flex flex-column justify-content-center align-items-center position-relative"
       >
-        <h1 class="mb-4">歡迎回來，XXX！</h1>
+        <h1 class="mb-4">歡迎回來，{{ currentUser }}！</h1>
         <div class="d-flex gap-3">
           <span>待審核會員：</span>
           <span>待審核檢舉：</span>

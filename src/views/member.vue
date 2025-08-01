@@ -1,13 +1,22 @@
 <script setup>
 import Content from '@/components/bar.vue'
 import Tab from '@/components/tab.vue'
-import { members as rawMembers } from '@/assets/data/data'
-import { ref, computed } from 'vue'
+import { useStore } from '@/stores/data'
+import { ref, computed, onMounted } from 'vue'
 
 const tabs = [{ title: '全部' }, { title: '待審核' }]
 
+const store = useStore()
+
+onMounted(() => {
+  store.fetchMembers()
+})
+
 // 會員資料
-const members = ref([...rawMembers])
+const members = computed(() => {
+  if (store.filter.length) return store.filter
+  else return store.members
+})
 
 const pendingMembers = computed(() => members.value.filter((m) => m.status === '待審核'))
 </script>

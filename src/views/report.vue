@@ -1,14 +1,22 @@
 <script setup>
 import Content from '@/components/bar.vue'
 import Tab from '@/components/tab.vue'
-import { reports as rawReports } from '@/assets/data/data'
-import { ref, computed } from 'vue'
+import { useStore } from '@/stores/data'
+import { ref, computed, onMounted } from 'vue'
 
 const tabs = [{ title: '全部' }, { title: '待審核' }]
 
-// 檢舉資料
+const store = useStore()
 
-const reports = ref([...rawReports])
+onMounted(() => {
+  store.fetchReports()
+})
+
+// 檢舉資料
+const reports = computed(() => {
+  if (store.filter.length) return store.filter
+  else return store.reports
+})
 
 const pendingReports = computed(() => reports.value.filter((item) => item.status === '待審核'))
 </script>
@@ -43,7 +51,7 @@ const pendingReports = computed(() => reports.value.filter((item) => item.status
                     <td>{{ item.title }}</td>
                     <td>{{ item.reason }}</td>
                     <td>{{ item.description }}</td>
-                    <td>{{ item.reporter }}</td>
+                    <td>{{ item.name }}</td>
                     <td>
                       <select v-model="item.status">
                         <option>已隱藏</option>
@@ -83,7 +91,7 @@ const pendingReports = computed(() => reports.value.filter((item) => item.status
                     <td>{{ item.title }}</td>
                     <td>{{ item.reason }}</td>
                     <td>{{ item.description }}</td>
-                    <td>{{ item.reporter }}</td>
+                    <td>{{ item.name }}</td>
                     <td>
                       <select v-model="item.status">
                         <option>已隱藏</option>
