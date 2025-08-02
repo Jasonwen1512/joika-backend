@@ -11,7 +11,7 @@ export const useAuth = defineStore('auth', () => {
   const currentUser = ref(null)
 
   const success = ref(false)
-  const login = (username, password) => {
+  const login = async (username, password) => {
     loginData.value.forEach((item) => {
       if (username === item.username && password === item.password) {
         success.value = true

@@ -62,13 +62,13 @@ const onLogin = () => {
       <h3 class="login text-center mt-2 mb-2">登入</h3>
       <form @submit.prevent="onLogin">
         <div class="username mb-4">
-          <label for="username" class="form-label">帳號</label>
+          <label for="username" class="form-label">使用者名稱</label>
           <input
             type="text"
             id="username"
             v-model="username"
             class="form-control"
-            placeholder="請輸入帳號"
+            placeholder="請輸入使用者名稱"
             required
           />
         </div>
