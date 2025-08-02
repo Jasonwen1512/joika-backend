@@ -28,7 +28,7 @@ const pendingActivitys = computed(() => activitys.value.filter((item) => item.st
         <template #tab-0>
           <div class="pt-3">
             <div class="table-wrapper">
-              <table class="activity-table">
+              <table class="activity-table table table-striped">
                 <thead>
                   <tr>
                     <th>活動編號</th>
@@ -66,7 +66,7 @@ const pendingActivitys = computed(() => activitys.value.filter((item) => item.st
         <template #tab-1>
           <div class="pt-3">
             <div class="table-wrapper">
-              <table class="activity-table">
+              <table class="activity-table table table-striped">
                 <thead>
                   <tr>
                     <th>活動編號</th>

@@ -1,10 +1,10 @@
 <script setup>
 import Content from '@/components/bar.vue'
-import { useStore } from '@/stores/data'
+import { useAuth } from '@/stores/auth'
 
-const store = useStore()
+const auth = useAuth()
 
-const currentUser = store.currentUser || '訪客'
+const currentUser = auth.currentUser || '訪客'
 </script>
 
 <template>
@@ -13,7 +13,8 @@ const currentUser = store.currentUser || '訪客'
       <div
         class="welcome-back d-flex flex-column justify-content-center align-items-center position-relative"
       >
-        <h1 class="mb-4">歡迎回來，{{ currentUser }}！</h1>
+        <h1 class="mb-4" v-if="auth.currentUser">歡迎回來，{{ currentUser }}！</h1>
+        <h1 class="mb-4" v-else>{{ currentUser }}</h1>
         <div class="d-flex gap-3">
           <span>待審核會員：</span>
           <span>待審核檢舉：</span>

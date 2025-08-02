@@ -29,7 +29,7 @@ const pendingReports = computed(() => reports.value.filter((item) => item.status
         <template #tab-0>
           <div class="pt-3">
             <div class="table-wrapper">
-              <table class="report-table">
+              <table class="report-table table table-striped">
                 <thead>
                   <tr>
                     <th>NO</th>
@@ -69,7 +69,7 @@ const pendingReports = computed(() => reports.value.filter((item) => item.status
         <template #tab-1>
           <div class="pt-3">
             <div class="table-wrapper">
-              <table class="report-table">
+              <table class="report-table table table-striped">
                 <thead>
                   <tr>
                     <th>NO</th>

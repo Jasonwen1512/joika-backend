@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuth } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,6 +43,17 @@ const router = createRouter({
     //   component: () => import('../views/AboutView.vue'),
     // },
   ],
+})
+
+// 設定沒有登入時，全部都導到login頁面
+router.beforeEach((to, from, next) => {
+  const auth = useAuth()
+  // 如果不是前往 login 頁，且沒有登入
+  if (to.name !== 'login' && !auth.currentUser) {
+    next({ name: 'login' }) // 導回 login
+  } else {
+    next() // 通過
+  }
 })
 
 export default router

@@ -1,19 +1,25 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useStore } from '@/stores/data'
+import { useAuth } from '@/stores/auth'
 
 const router = useRouter()
 
 const username = ref('')
 const password = ref('')
 
-const store = useStore()
+const auth = useAuth()
+
+// 當到登入頁時，重製資訊
+onMounted(() => {
+  auth.currentUser = ''
+  auth.success = false
+})
 
 const onLogin = () => {
-  const success = store.login(username.value, password.value)
+  const success = auth.login(username.value, password.value)
   if (success) {
-    console.log(`登入成功，使用者${store.currentUser}`)
+    console.log(`登入成功，使用者${auth.currentUser}`)
     router.push('/home')
   } else {
     alert('帳號或密碼錯誤')

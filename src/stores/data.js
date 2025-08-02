@@ -359,25 +359,25 @@ export const useStore = defineStore('data', () => {
     },
   ])
 
-  const loginData = ref([
-    {
-      username: 'joika',
-      password: '123456',
-    },
-  ])
+  // const loginData = ref([
+  //   {
+  //     username: 'joika',
+  //     password: '123456',
+  //   },
+  // ])
 
-  const currentUser = ref(null)
+  // const currentUser = ref(null)
 
-  const success = ref(false)
-  const login = (username, password) => {
-    loginData.value.forEach((item) => {
-      if (username === item.username && password === item.password) {
-        success.value = true
-        currentUser.value = username
-      }
-    })
-    return success.value
-  }
+  // const success = ref(false)
+  // const login = (username, password) => {
+  //   loginData.value.forEach((item) => {
+  //     if (username === item.username && password === item.password) {
+  //       success.value = true
+  //       currentUser.value = username
+  //     }
+  //   })
+  //   return success.value
+  // }
 
   const currentType = ref('')
 
@@ -425,12 +425,8 @@ export const useStore = defineStore('data', () => {
     reports,
     contacts,
     activitys,
-    success,
-    loginData,
-    currentUser,
     currentType,
     filter,
-    login,
     fetchMembers,
     fetchReports,
     fetchContacts,

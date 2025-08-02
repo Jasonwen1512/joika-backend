@@ -26,6 +26,12 @@ const openModal = (item) => {
   selectedItem.value = item
   replyMessage.value = item.reply || ''
 }
+
+// 送出後的處理放這
+const handleSubmit = () => {
+  selectedItem.reply = replyMessage
+  console.log(selectedItem.value)
+}
 </script>
 
 <template>
@@ -36,7 +42,7 @@ const openModal = (item) => {
         <template #tab-0>
           <div class="pt-3">
             <div class="table-wrapper">
-              <table class="concat-table">
+              <table class="concat-table table table-striped">
                 <thead>
                   <tr>
                     <th>NO</th>
@@ -88,7 +94,7 @@ const openModal = (item) => {
         <template #tab-1>
           <div class="pt-3">
             <div class="table-wrapper">
-              <table class="concat-table">
+              <table class="concat-table table table-striped">
                 <thead>
                   <tr>
                     <th>NO</th>
@@ -146,7 +152,6 @@ const openModal = (item) => {
       data-bs-keyboard="false"
       tabindex="-1"
       aria-labelledby="staticBackdropLabel"
-      aria-hidden="true"
     >
       <div class="modal-dialog">
         <div class="modal-content">
@@ -184,12 +189,7 @@ const openModal = (item) => {
             <button
               type="button"
               class="btn btn-primary"
-              @click="
-                () => {
-                  selectedItem.reply = replyMessage
-                  console.log(selectedItem)
-                }
-              "
+              @click="handleSubmit"
               data-bs-dismiss="modal"
             >
               送出

@@ -29,7 +29,7 @@ const pendingMembers = computed(() => members.value.filter((m) => m.status === '
         <!-- 全部會員 -->
         <template #tab-0>
           <div class="pt-3">
-            <table class="member-table">
+            <table class="member-table table table-striped">
               <thead>
                 <tr>
                   <th>NO</th>
@@ -61,7 +61,7 @@ const pendingMembers = computed(() => members.value.filter((m) => m.status === '
         <!-- 待審核會員 -->
         <template #tab-1>
           <div class="pt-3">
-            <table class="member-table">
+            <table class="member-table table table-striped">
               <thead>
                 <tr>
                   <th>NO</th>
