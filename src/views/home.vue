@@ -27,7 +27,7 @@ const currentUser = auth.currentUser || '訪客'
 
 <style scoped lang="scss">
 .welcome-back {
-  top: 300px;
+  top: 16vw;
   span {
     background-color: #f4d577;
     padding: 15px 30px;
