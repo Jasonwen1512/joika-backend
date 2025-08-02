@@ -202,12 +202,6 @@ const handleSubmit = () => {
 </template>
 
 <style scoped lang="scss">
-.table-wrapper {
-  overflow-x: auto;
-  border: 1px solid #f0efeb;
-  max-height: calc(100vh - 16em);
-}
-
 .concat-table {
   width: 100%;
   border-collapse: collapse;

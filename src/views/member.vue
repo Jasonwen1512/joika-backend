@@ -94,11 +94,6 @@ const pendingMembers = computed(() => members.value.filter((m) => m.status === '
   </div>
 </template>
 <style scoped lang="scss">
-.table-wrapper {
-  overflow-x: auto;
-  border: 1px solid #f0efeb;
-  max-height: calc(100vh - 16em);
-}
 .member-table {
   width: 100%;
   border-collapse: collapse;

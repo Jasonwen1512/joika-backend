@@ -27,4 +27,8 @@ body {
 .page-wrapper {
   height: 100vh;
 }
+.table-wrapper {
+  overflow-x: auto;
+  max-height: calc(100vh - 15em);
+}
 </style>
