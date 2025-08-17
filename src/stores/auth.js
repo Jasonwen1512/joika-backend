@@ -16,13 +16,10 @@ export const useAuth = defineStore('auth', () => {
         new URLSearchParams({ username: username, password: password }),
         { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
       )
-      const staffName = res.data
-      if (staffName) {
-        success.value = true
-        currentUser.value = staffName
-      } else {
-        success.value = false
-      }
+      const status = res.data
+      success.value = status.success
+      currentUser.value = status.staff_name
+
       return success.value
     } catch (error) {
       console.error('post => login.php 失敗', error)
