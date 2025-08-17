@@ -4,13 +4,9 @@ import Tab from '@/components/tab.vue'
 import { useStore } from '@/stores/data'
 import { ref, computed, onMounted } from 'vue'
 
-const tabs = [{ title: '全部' }, { title: '待審核' }]
+const tabs = [{ title: '文章檢舉' }, { title: '留言檢舉' }, { title: '全部' }, { title: '待審核' }]
 
 const store = useStore()
-
-onMounted(() => {
-  store.fetchReports()
-})
 
 // 檢舉資料
 const reports = computed(() => {
@@ -67,6 +63,86 @@ const pendingReports = computed(() => reports.value.filter((item) => item.status
           </div>
         </template>
         <template #tab-1>
+          <div class="pt-3">
+            <div class="table-wrapper">
+              <table class="report-table table table-striped">
+                <thead>
+                  <tr>
+                    <th>NO</th>
+                    <th>檢舉日期</th>
+                    <th>類型</th>
+                    <th>對應標題</th>
+                    <th>檢舉原因</th>
+                    <th>被檢舉說明</th>
+                    <th>檢舉人姓名</th>
+                    <th>狀態</th>
+                    <th>審核員工</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in reports" :key="index">
+                    <td>{{ item.no }}</td>
+                    <td>{{ item.date }}</td>
+                    <td>{{ item.type }}</td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.reason }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>
+                      <select v-model="item.status">
+                        <option>已隱藏</option>
+                        <option>已駁回</option>
+                        <option>待審核</option>
+                      </select>
+                    </td>
+                    <td>{{ item.admin }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </template>
+        <template #tab-2>
+          <div class="pt-3">
+            <div class="table-wrapper">
+              <table class="report-table table table-striped">
+                <thead>
+                  <tr>
+                    <th>NO</th>
+                    <th>檢舉日期</th>
+                    <th>類型</th>
+                    <th>對應標題</th>
+                    <th>檢舉原因</th>
+                    <th>被檢舉說明</th>
+                    <th>檢舉人姓名</th>
+                    <th>狀態</th>
+                    <th>審核員工</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in reports" :key="index">
+                    <td>{{ item.no }}</td>
+                    <td>{{ item.date }}</td>
+                    <td>{{ item.type }}</td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.reason }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>
+                      <select v-model="item.status">
+                        <option>已隱藏</option>
+                        <option>已駁回</option>
+                        <option>待審核</option>
+                      </select>
+                    </td>
+                    <td>{{ item.admin }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </template>
+        <template #tab-3>
           <div class="pt-3">
             <div class="table-wrapper">
               <table class="report-table table table-striped">

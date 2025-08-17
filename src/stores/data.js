@@ -1,5 +1,9 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import axios from 'axios'
+
+// 環境變數
+const VITE_API_BASE = import.meta.env.VITE_API_BASE
 
 // export const useCounterStore = defineStore('counter', () => {
 //   const count = ref(0)
@@ -55,6 +59,10 @@ export const useStore = defineStore('data', () => {
       admin: '',
     },
   ])
+
+  const postReports = ref([])
+
+  const activityCommentReports = ref([])
 
   const contacts = ref([
     {
@@ -359,26 +367,6 @@ export const useStore = defineStore('data', () => {
     },
   ])
 
-  // const loginData = ref([
-  //   {
-  //     username: 'joika',
-  //     password: '123456',
-  //   },
-  // ])
-
-  // const currentUser = ref(null)
-
-  // const success = ref(false)
-  // const login = (username, password) => {
-  //   loginData.value.forEach((item) => {
-  //     if (username === item.username && password === item.password) {
-  //       success.value = true
-  //       currentUser.value = username
-  //     }
-  //   })
-  //   return success.value
-  // }
-
   const currentType = ref('')
 
   const allData = {
@@ -392,7 +380,7 @@ export const useStore = defineStore('data', () => {
     const target = allData[currentType.value]?.value || []
 
     if (!search.value.trim()) {
-      // 👉 搜尋為空，回傳全部資料
+      // 搜尋為空，回傳全部資料
       return target
     }
 
@@ -404,11 +392,18 @@ export const useStore = defineStore('data', () => {
   // 分別建立 async 函式抓取資料
   // 之後從裡面連線api
   const fetchMembers = async () => {
-    members.value = members.value
+    const res = await axios.get(`${VITE_API_BASE}/admin/members/list.php`)
+    members.value = res.data
   }
 
-  const fetchReports = async () => {
-    reports.value = reports.value
+  const fetchPostReports = async () => {
+    const res = await axios.get(`${VITE_API_BASE}/admin/members/post-report.php`)
+    postReports.value = res.data
+  }
+
+  const fetchActivityCommentReports = async () => {
+    const res = await axios.get(`${VITE_API_BASE}/admin/activities/commment-report.php`)
+    activityCommentReports.value = res.data
   }
 
   const fetchContacts = async () => {
@@ -419,16 +414,22 @@ export const useStore = defineStore('data', () => {
     activitys.value = activitys.value
   }
 
+  fetchMembers()
+  fetchPostReports()
+  fetchActivityCommentReports()
+  fetchContacts()
+  fetchActivitys()
+
   return {
     search,
     members,
-    reports,
     contacts,
     activitys,
     currentType,
     filter,
     fetchMembers,
-    fetchReports,
+    fetchPostReports,
+    fetchActivityCommentReports,
     fetchContacts,
     fetchActivitys,
   }

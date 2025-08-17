@@ -8,10 +8,6 @@ const tabs = [{ title: '全部' }, { title: '待審核' }]
 
 const store = useStore()
 
-onMounted(() => {
-  store.fetchMembers()
-})
-
 // 會員資料
 const members = computed(() => {
   if (store.filter.length) return store.filter
