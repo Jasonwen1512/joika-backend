@@ -1,25 +1,39 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import axios from 'axios'
+
+// 環境變數
+const VITE_API_BASE = import.meta.env.VITE_API_BASE
 
 export const useAuth = defineStore('auth', () => {
-  const loginData = ref([
-    {
-      username: 'joika',
-      password: '123456',
-    },
-  ])
   const currentUser = ref(null)
 
   const success = ref(false)
   const login = async (username, password) => {
-    loginData.value.forEach((item) => {
-      if (username === item.username && password === item.password) {
+    try {
+      const res = await axios.post(
+        `${VITE_API_BASE}/admin/login.php`,
+        new URLSearchParams({ username: username, password: password }),
+        { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
+      )
+      const staffName = res.data
+      if (staffName) {
         success.value = true
-        currentUser.value = username
+        currentUser.value = staffName
+      } else {
+        success.value = false
       }
-    })
-    return success.value
+      return success.value
+    } catch (error) {
+      console.error('post => login.php 失敗', error)
+    }
+    // loginData.value.forEach((item) => {
+    //   if (username === item.username && password === item.password) {
+    //     success.value = true
+    //     currentUser.value = username
+    //   }
+    // })
   }
 
-  return { loginData, currentUser, success, login }
+  return { currentUser, success, login }
 })

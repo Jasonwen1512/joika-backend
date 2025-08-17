@@ -16,13 +16,13 @@ onMounted(() => {
   auth.success = false
 })
 
-const onLogin = () => {
-  const success = auth.login(username.value, password.value)
+const onLogin = async () => {
+  const success = await auth.login(username.value, password.value)
   if (success) {
     console.log(`登入成功，使用者${auth.currentUser}`)
     router.push('/home')
   } else {
-    alert('帳號或密碼錯誤')
+    alert('使用者名稱或密碼錯誤')
     username.value = ''
     password.value = ''
   }
