@@ -9,7 +9,7 @@ const tabs = [{ title: '全部' }, { title: '待處理' }]
 const store = useStore()
 
 onMounted(() => {
-  store.fetchContacts()
+  store.currentType = 'contacts'
 })
 
 const contacts = computed(() => {
@@ -37,7 +37,7 @@ const handleSubmit = () => {
 <template>
   <div>
     <Content title="聯絡表單" />
-    <div class="ps-5 pe-5">
+    <div class="ms-5 me-5">
       <Tab :tabs="tabs">
         <template #tab-0>
           <div class="pt-3">
@@ -56,17 +56,17 @@ const handleSubmit = () => {
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in contacts" :key="index">
-                    <td>{{ item.no }}</td>
-                    <td>{{ item.date }}</td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.title }}</td>
+                    <td>{{ item.FORM_ID }}</td>
+                    <td>{{ item.CREATED_AT }}</td>
+                    <td>{{ item.NAME }}</td>
+                    <td>{{ item.FORM_TITLE }}</td>
                     <td>
-                      <select v-model="item.status">
+                      <select v-model="item.FORM_STATUS">
                         <option>已處理</option>
                         <option>待處理</option>
                       </select>
                     </td>
-                    <td>{{ item.admin }}</td>
+                    <td>{{ item.PROCESSED_BY }}</td>
                     <td
                       class="reply"
                       data-bs-toggle="modal"
@@ -92,7 +92,7 @@ const handleSubmit = () => {
             </div></div
         ></template>
         <template #tab-1>
-          <div class="pt-3">
+          <div class="pt-3" v-if="pendingcontacts.length">
             <div class="table-wrapper">
               <table class="concat-table table table-striped">
                 <thead>
@@ -108,17 +108,17 @@ const handleSubmit = () => {
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in pendingcontacts" :key="index">
-                    <td>{{ item.no }}</td>
-                    <td>{{ item.date }}</td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.title }}</td>
+                    <td>{{ item.FORM_ID }}</td>
+                    <td>{{ item.CREATED_AT }}</td>
+                    <td>{{ item.NAME }}</td>
+                    <td>{{ item.FORM_TITLE }}</td>
                     <td>
-                      <select v-model="item.status">
+                      <select v-model="item.FORM_STATUS">
                         <option>已處理</option>
                         <option>待處理</option>
                       </select>
                     </td>
-                    <td>{{ item.admin }}</td>
+                    <td>{{ item.PROCESSED_BY }}</td>
                     <td
                       class="reply"
                       data-bs-toggle="modal"
@@ -141,8 +141,10 @@ const handleSubmit = () => {
                   </tr>
                 </tbody>
               </table>
-            </div></div
-        ></template>
+            </div>
+          </div>
+          <div class="text-center text-secondary my-3" v-else>沒有資料</div>
+        </template>
       </Tab>
     </div>
     <div
@@ -156,7 +158,9 @@ const handleSubmit = () => {
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">回覆 no：{{ selectedItem?.no }}</h5>
+            <h5 class="modal-title" id="staticBackdropLabel">
+              回覆 no：{{ selectedItem?.FORM_ID }}
+            </h5>
             <button
               type="button"
               class="btn-close"
@@ -166,12 +170,12 @@ const handleSubmit = () => {
           </div>
           <!-- 彈窗資料內容 -->
           <div class="modal-body" v-if="selectedItem">
-            <p><strong>使用者姓名：</strong> {{ selectedItem.name }}</p>
-            <p><strong>手機號碼：</strong> {{ selectedItem.phone }}</p>
-            <p><strong>Email：</strong> {{ selectedItem.email }}</p>
-            <p><strong>問題標題：</strong> {{ selectedItem.title }}</p>
+            <p><strong>使用者姓名：</strong> {{ selectedItem.NAME }}</p>
+            <p><strong>手機號碼：</strong> {{ selectedItem.MEMBER_PHONE }}</p>
+            <p><strong>Email：</strong> {{ selectedItem.MEMBER_EMAIL }}</p>
+            <p><strong>問題標題：</strong> {{ selectedItem.FORM_TITLE }}</p>
             <p><strong>問題說明：</strong></p>
-            <p class="ps-3">{{ selectedItem.content }}</p>
+            <p class="ps-3">{{ selectedItem.FORM_CONTENT }}</p>
 
             <div class="mt-3">
               <label for="reply" class="form-label"><strong>問題回覆</strong></label>

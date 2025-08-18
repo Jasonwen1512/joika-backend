@@ -4,12 +4,12 @@ import Tab from '@/components/tab.vue'
 import { useStore } from '@/stores/data'
 import { ref, computed, onMounted } from 'vue'
 
-const tabs = [{ title: '全部' }, { title: '待審核' }]
+const tabs = [{ title: '全部' }, { title: '審核中' }]
 
 const store = useStore()
 
 onMounted(() => {
-  store.fetchActivitys()
+  store.currentType = 'activitys'
 })
 
 const activitys = computed(() => {
@@ -17,13 +17,15 @@ const activitys = computed(() => {
   else return store.activitys
 })
 
-const pendingActivitys = computed(() => activitys.value.filter((item) => item.status === '待審核'))
+const pendingActivitys = computed(() =>
+  activitys.value.filter((item) => item.ACTIVITY_STATUS === '審核中'),
+)
 </script>
 
 <template>
   <div>
     <Content title="揪團管理" />
-    <div class="ps-5 pe-5">
+    <div class="ms-5 me-5">
       <Tab :tabs="tabs">
         <template #tab-0>
           <div class="pt-3">
@@ -42,19 +44,19 @@ const pendingActivitys = computed(() => activitys.value.filter((item) => item.st
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in activitys" :key="index">
-                    <td>{{ item.no }}</td>
-                    <td>{{ item.date }}</td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.title }}</td>
-                    <td>{{ item.dead_line }}</td>
-                    <td>{{ item.number }}</td>
+                    <td>{{ item.ACTIVITY_NO }}</td>
+                    <td>{{ item.CREATED_AT }}</td>
+                    <td>{{ item.HOST_NAME }}</td>
+                    <td>{{ item.ACTIVITY_NAME }}</td>
+                    <td>{{ item.REGISTRATION_DEADLINE }}</td>
+                    <td>{{ item.CURRENT_PARTICIPANT }} / {{ item.MAX_PARTICIPANT }}</td>
                     <td>
-                      <select v-model="item.status">
+                      <select v-model="item.ACTIVITY_STATUS">
                         <option>已取消</option>
-                        <option>已駁回</option>
                         <option>開團中</option>
-                        <option>已結束</option>
-                        <option>待審核</option>
+                        <option>已成團</option>
+                        <option>已完成</option>
+                        <option>審核中</option>
                       </select>
                     </td>
                   </tr>
@@ -65,7 +67,7 @@ const pendingActivitys = computed(() => activitys.value.filter((item) => item.st
         </template>
         <template #tab-1>
           <div class="pt-3">
-            <div class="table-wrapper">
+            <div class="table-wrapper" v-if="pendingActivitys.length">
               <table class="activity-table table table-striped">
                 <thead>
                   <tr>
@@ -80,25 +82,26 @@ const pendingActivitys = computed(() => activitys.value.filter((item) => item.st
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in pendingActivitys" :key="index">
-                    <td>{{ item.no }}</td>
-                    <td>{{ item.date }}</td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.title }}</td>
-                    <td>{{ item.dead_line }}</td>
-                    <td>{{ item.number }}</td>
+                    <td>{{ item.ACTIVITY_NO }}</td>
+                    <td>{{ item.CREATED_AT }}</td>
+                    <td>{{ item.HOST_NAME }}</td>
+                    <td>{{ item.ACTIVITY_NAME }}</td>
+                    <td>{{ item.REGISTRATION_DEADLINE }}</td>
+                    <td>{{ item.CURRENT_PARTICIPANT }} / {{ item.MAX_PARTICIPANT }}</td>
                     <td>
-                      <select v-model="item.status">
+                      <select v-model="item.ACTIVITY_STATUS">
                         <option>已取消</option>
-                        <option>已駁回</option>
                         <option>開團中</option>
-                        <option>已結束</option>
-                        <option>待審核</option>
+                        <option>已成團</option>
+                        <option>已完成</option>
+                        <option>審核中</option>
                       </select>
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
+            <div class="text-center text-secondary my-3" v-else>沒有資料</div>
           </div>
         </template>
       </Tab>

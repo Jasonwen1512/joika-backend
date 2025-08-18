@@ -24,41 +24,41 @@ export const useStore = defineStore('data', () => {
     { no: 3, date: '2025/07/04', name: '黃小名', gender: '男', status: '待審核' },
   ])
 
-  const reports = ref([
-    {
-      no: 1,
-      date: '2025/3/3',
-      type: '文章',
-      title: '一起去看電影',
-      reason: '不當言論',
-      description: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-      name: '陳陳',
-      status: '已隱藏',
-      admin: 'ADMIN',
-    },
-    {
-      no: 2,
-      date: '2025/3/3',
-      type: '活動',
-      title: '一起去看電影',
-      reason: '騷擾行為',
-      description: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-      name: '陳陳',
-      status: '已駁回',
-      admin: 'ADMIN',
-    },
-    {
-      no: 3,
-      date: '2025/3/3',
-      type: '文章',
-      title: '一起去看電影',
-      reason: '散佈個資',
-      description: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-      name: '陳陳',
-      status: '待審核',
-      admin: '',
-    },
-  ])
+  // const reports = ref([
+  //   {
+  //     no: 1,
+  //     date: '2025/3/3',
+  //     type: '文章',
+  //     title: '一起去看電影',
+  //     reason: '不當言論',
+  //     description: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+  //     name: '陳陳',
+  //     status: '已隱藏',
+  //     admin: 'ADMIN',
+  //   },
+  //   {
+  //     no: 2,
+  //     date: '2025/3/3',
+  //     type: '活動',
+  //     title: '一起去看電影',
+  //     reason: '騷擾行為',
+  //     description: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+  //     name: '陳陳',
+  //     status: '已駁回',
+  //     admin: 'ADMIN',
+  //   },
+  //   {
+  //     no: 3,
+  //     date: '2025/3/3',
+  //     type: '文章',
+  //     title: '一起去看電影',
+  //     reason: '散佈個資',
+  //     description: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+  //     name: '陳陳',
+  //     status: '待審核',
+  //     admin: '',
+  //   },
+  // ])
 
   const postReports = ref([])
 
@@ -371,22 +371,52 @@ export const useStore = defineStore('data', () => {
 
   const allData = {
     members,
-    reports,
+    postReports,
+    activityCommentReports,
     activitys,
     contacts,
   }
 
   const filter = computed(() => {
-    const target = allData[currentType.value]?.value || []
+    const target = allData[currentType.value]?.value ?? []
 
     if (!search.value.trim()) {
       // 搜尋為空，回傳全部資料
       return target
     }
 
-    return target.filter(
-      (m) => m.name.includes(search.value) || String(m.no).includes(search.value),
-    )
+    switch (currentType.value) {
+      case 'members':
+        return target.filter(
+          (m) =>
+            m?.MEMBER_NAME.includes(search.value) || String(m?.MEMBER_ID).includes(search.value),
+        )
+      case 'postReports':
+        return target.filter(
+          (m) => m?.NAME.includes(search.value) || String(m?.POST_REPORT_NO).includes(search.value),
+        )
+      case 'activityCommentReports':
+        return target.filter(
+          (m) =>
+            m?.NAME.includes(search.value) ||
+            String(m?.ACTIVITY_COMMENT_REPORT_ID).includes(search.value),
+        )
+      case 'activitys':
+        return target.filter(
+          (m) =>
+            m?.HOST_NAME.includes(search.value) || String(m?.ACTIVITY_NO).includes(search.value),
+        )
+      case 'contacts':
+        return target.filter(
+          (m) => m?.NAME.includes(search.value) || String(m?.FORM_ID).includes(search.value),
+        )
+      default:
+        break
+    }
+
+    // return target.filter(
+    //   (m) => m.name.includes(search.value) || String(m.no).includes(search.value),
+    // )
   })
 
   // 分別建立 async 函式抓取資料
@@ -407,11 +437,13 @@ export const useStore = defineStore('data', () => {
   }
 
   const fetchContacts = async () => {
-    contacts.value = contacts.value
+    const res = await axios.get(`${VITE_API_BASE}/admin/form.php`)
+    contacts.value = res.data
   }
 
   const fetchActivitys = async () => {
-    activitys.value = activitys.value
+    const res = await axios.get(`${VITE_API_BASE}/admin/activities/manage.php`)
+    activitys.value = res.data
   }
 
   fetchMembers()
@@ -423,6 +455,8 @@ export const useStore = defineStore('data', () => {
   return {
     search,
     members,
+    postReports,
+    activityCommentReports,
     contacts,
     activitys,
     currentType,

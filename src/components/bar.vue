@@ -12,7 +12,7 @@ library.add(faSearch)
 
 const route = useRoute()
 const router = useRouter()
-const currentPath = computed(() => route.path)
+// const currentPath = computed(() => route.path)
 
 router.afterEach(() => {
   store.search = ''
@@ -20,22 +20,22 @@ router.afterEach(() => {
 
 const store = useStore()
 
-const pathToDataKey = {
-  '/member': 'members',
-  '/report': 'reports',
-  '/contact-form': 'contacts',
-  '/activity-manage': 'activitys',
-}
+// const pathToDataKey = {
+//   '/member': 'members',
+//   '/report': 'reports',
+//   '/contact-form': 'contacts',
+//   '/activity-manage': 'activitys',
+// }
 
-const currentDataKey = computed(() => pathToDataKey[currentPath.value])
+// const currentDataKey = computed(() => pathToDataKey[currentPath.value])
 
-watch(
-  currentDataKey,
-  (val) => {
-    if (val) store.currentType = val
-  },
-  { immediate: true },
-)
+// watch(
+//   currentDataKey,
+//   (val) => {
+//     if (val) store.currentType = val
+//   },
+//   { immediate: true },
+// )
 
 const { title } = defineProps({
   title: {
