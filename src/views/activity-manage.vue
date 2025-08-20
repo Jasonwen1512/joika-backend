@@ -2,24 +2,76 @@
 import Content from '@/components/bar.vue'
 import Tab from '@/components/tab.vue'
 import { useStore } from '@/stores/data'
+import { useUpdate } from '@/stores/update'
 import { ref, computed, onMounted } from 'vue'
 
 const tabs = [{ title: '全部' }, { title: '審核中' }]
 
 const store = useStore()
+let copy = null
 
 onMounted(() => {
   store.currentType = 'activitys'
+  // copy 為資料原始狀態
+  copy = JSON.parse(JSON.stringify(store.filter.length ? store.filter : store.activitys))
 })
 
 const activitys = computed(() => {
-  if (store.filter.length) return store.filter
-  else return store.activitys
+  return store.activitys.map((m) => {
+    const temp = update.updateActivitys.find((u) => u.ACTIVITY_NO === m.ACTIVITY_NO)
+    return (
+      temp ?? {
+        ACTIVITY_NO: m.ACTIVITY_NO,
+        CREATED_AT: m.CREATED_AT,
+        HOST_NAME: m.HOST_NAME,
+        ACTIVITY_NAME: m.ACTIVITY_NAME,
+        REGISTRATION_DEADLINE: m.REGISTRATION_DEADLINE,
+        CURRENT_PARTICIPANT: m.CURRENT_PARTICIPANT,
+        MAX_PARTICIPANT: m.MAX_PARTICIPANT,
+        ACTIVITY_STATUS: m.ACTIVITY_STATUS,
+      }
+    )
+  })
 })
 
 const pendingActivitys = computed(() =>
   activitys.value.filter((item) => item.ACTIVITY_STATUS === '審核中'),
 )
+
+const update = useUpdate()
+
+const pushUpdateData = (m, c) => {
+  if (store.currentType === 'activitys') {
+    const existing = update.updateActivitys.find((item) => item.ACTIVITY_NO === m.ACTIVITY_NO)
+
+    if (existing) {
+      // console.log(m.MEMBER_STATUS, c.MEMBER_STATUS)
+
+      if (m.ACTIVITY_STATUS === c.ACTIVITY_STATUS) {
+        // 改回原始值 → 從暫存陣列移除
+        update.updateActivitys = update.updateActivitys.filter(
+          (item) => item.ACTIVITY_NO !== m.ACTIVITY_NO,
+        )
+        // console.log('資料已恢復原本狀態，已從暫存移除')
+      } else {
+        // 不同 → 更新 status
+        existing.ACTIVITY_STATUS = m.ACTIVITY_STATUS
+        // console.log('資料已存在，更新 status')
+      }
+    } else {
+      update.updateActivitys.push({
+        ACTIVITY_NO: m.ACTIVITY_NO,
+        CREATED_AT: m.CREATED_AT,
+        HOST_NAME: m.HOST_NAME,
+        ACTIVITY_NAME: m.ACTIVITY_NAME,
+        REGISTRATION_DEADLINE: m.REGISTRATION_DEADLINE,
+        CURRENT_PARTICIPANT: m.CURRENT_PARTICIPANT,
+        MAX_PARTICIPANT: m.MAX_PARTICIPANT,
+        ACTIVITY_STATUS: m.ACTIVITY_STATUS,
+      })
+    }
+  }
+}
 </script>
 
 <template>
@@ -51,7 +103,10 @@ const pendingActivitys = computed(() =>
                     <td>{{ item.REGISTRATION_DEADLINE }}</td>
                     <td>{{ item.CURRENT_PARTICIPANT }} / {{ item.MAX_PARTICIPANT }}</td>
                     <td>
-                      <select v-model="item.ACTIVITY_STATUS">
+                      <select
+                        v-model="item.ACTIVITY_STATUS"
+                        @change="pushUpdateData(item, copy[index])"
+                      >
                         <option>已取消</option>
                         <option>開團中</option>
                         <option>已成團</option>
@@ -89,7 +144,10 @@ const pendingActivitys = computed(() =>
                     <td>{{ item.REGISTRATION_DEADLINE }}</td>
                     <td>{{ item.CURRENT_PARTICIPANT }} / {{ item.MAX_PARTICIPANT }}</td>
                     <td>
-                      <select v-model="item.ACTIVITY_STATUS">
+                      <select
+                        v-model="item.ACTIVITY_STATUS"
+                        @change="pushUpdateData(item, copy[index])"
+                      >
                         <option>已取消</option>
                         <option>開團中</option>
                         <option>已成團</option>

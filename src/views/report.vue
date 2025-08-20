@@ -2,42 +2,78 @@
 import Content from '@/components/bar.vue'
 import Tab from '@/components/tab.vue'
 import { useStore } from '@/stores/data'
+import { useUpdate } from '@/stores/update'
+import { useAuth } from '@/stores/auth'
 import { ref, reactive, computed, onMounted, watch } from 'vue'
+
+const auth = useAuth()
 
 const tabs = [{ title: '全部' }, { title: '待審核' }]
 
 const store = useStore()
+let copyPost = null
+let copyActivityComment = null
 
 onMounted(() => {
   store.currentType = 'postReports'
+
+  copyPost = store.postReports.map((r) => ({
+    id: r.POST_REPORT_NO,
+    createdAt: r.CREATED_AT,
+    reason: r.REASON,
+    description: r.REPORT_DESCRIPTION,
+    reporterName: r.REPORTER_NAME,
+    status: r.REPORT_STATUS,
+    admin: r.ADMIN_NAME ?? null,
+  }))
+
+  copyActivityComment = store.activityCommentReports.map((r) => ({
+    id: r.ACTIVITY_COMMENT_REPORT_ID,
+    createdAt: r.CREATED_AT,
+    reason: r.REASON,
+    description: r.REPORT_DESCRIPTION,
+    reporterName: r.REPORTER_NAME,
+    status: r.REPORT_STATUS,
+    admin: r.ADMIN_NAME ?? null,
+  }))
+
+  // console.log(copyPost, copyActivityComment)
 })
 
 // 檢舉資料
 const reports = computed(() => {
   if (store.currentType === 'postReports') {
-    return reactive(
-      store.postReports.map((r) => ({
-        id: r.POST_REPORT_NO,
-        createdAt: r.CREATED_AT,
-        reason: r.REASON,
-        description: r.REPORT_DESCRIPTION,
-        reporterName: r.NAME,
-        status: r.REPORT_STATUS,
-        admin: r.admin ?? null,
-      })),
-    )
+    return store.postReports.map((r) => {
+      const temp = update.updatePostReports.find((u) => u.id === r.POST_REPORT_NO)
+      return (
+        temp ?? {
+          id: r.POST_REPORT_NO,
+          createdAt: r.CREATED_AT,
+          reason: r.REASON,
+          description: r.REPORT_DESCRIPTION,
+          reporterName: r.REPORTER_NAME,
+          status: r.REPORT_STATUS,
+          admin: r.ADMIN_NAME ?? null,
+        }
+      )
+    })
   } else if (store.currentType === 'activityCommentReports') {
-    return reactive(
-      store.activityCommentReports.map((r) => ({
-        id: r.ACTIVITY_COMMENT_REPORT_ID,
-        createdAt: r.CREATED_AT,
-        reason: r.REASON,
-        description: r.REPORT_DESCRIPTION,
-        reporterName: r.NAME,
-        status: r.REPORT_STATUS,
-        admin: r.admin ?? null,
-      })),
-    )
+    return store.activityCommentReports.map((r) => {
+      const temp = update.updateActivityCommentReports.find(
+        (u) => u.id === r.ACTIVITY_COMMENT_REPORT_ID,
+      )
+      return (
+        temp ?? {
+          id: r.ACTIVITY_COMMENT_REPORT_ID,
+          createdAt: r.CREATED_AT,
+          reason: r.REASON,
+          description: r.REPORT_DESCRIPTION,
+          reporterName: r.REPORTER_NAME,
+          status: r.REPORT_STATUS,
+          admin: r.ADMIN_NAME ?? null,
+        }
+      )
+    })
   } else {
     return []
   }
@@ -45,9 +81,84 @@ const reports = computed(() => {
 
 const changeData = (data) => {
   store.currentType = data
+  if (data === 'postReports') {
+    copyPost = store.postReports.map((r) => ({
+      id: r.POST_REPORT_NO,
+      createdAt: r.CREATED_AT,
+      reason: r.REASON,
+      description: r.REPORT_DESCRIPTION,
+      reporterName: r.REPORTER_NAME,
+      status: r.REPORT_STATUS,
+      admin: r.ADMIN_NAME ?? null,
+    }))
+  } else if (data === 'activityCommentReports') {
+    copyActivityComment = store.activityCommentReports.map((r) => ({
+      id: r.ACTIVITY_COMMENT_REPORT_ID,
+      createdAt: r.CREATED_AT,
+      reason: r.REASON,
+      description: r.REPORT_DESCRIPTION,
+      reporterName: r.REPORTER_NAME,
+      status: r.REPORT_STATUS,
+      admin: r.ADMIN_NAME ?? null,
+    }))
+  }
 }
 
 const pendingReports = computed(() => reports.value.filter((item) => item.status === '待審核'))
+
+const update = useUpdate()
+
+const pushUpdateData = (m, c) => {
+  if (store.currentType === 'postReports') {
+    const existing = update.updatePostReports.find((item) => item.id === m.id)
+
+    if (existing) {
+      if (m.status === c.status) {
+        // 改回原始值 → 從暫存移除
+        update.updatePostReports = update.updatePostReports.filter((item) => item.id !== m.id)
+      } else {
+        // 不同 → 更新 status
+        existing.status = m.status
+        existing.admin = m.status !== '待審核' ? auth.currentUser : null
+      }
+    } else {
+      update.updatePostReports.push({
+        id: m.id,
+        createdAt: m.createdAt,
+        reason: m.reason,
+        description: m.description,
+        reporterName: m.reporterName,
+        status: m.status,
+        admin: m.status !== '待審核' ? auth.currentUser : null,
+      })
+    }
+  }
+
+  if (store.currentType === 'activityCommentReports') {
+    const existing = update.updateActivityCommentReports.find((item) => item.id === m.id)
+
+    if (existing) {
+      if (m.status === c.status) {
+        update.updateActivityCommentReports = update.updateActivityCommentReports.filter(
+          (item) => item.id !== m.id,
+        )
+      } else {
+        existing.status = m.status
+        existing.admin = m.status !== '待審核' ? auth.currentUser : null
+      }
+    } else {
+      update.updateActivityCommentReports.push({
+        id: m.id,
+        createdAt: m.createdAt,
+        reason: m.reason,
+        description: m.description,
+        reporterName: m.reporterName,
+        status: m.status,
+        admin: m.status !== '待審核' ? auth.currentUser : null,
+      })
+    }
+  }
+}
 </script>
 
 <template>
@@ -78,7 +189,17 @@ const pendingReports = computed(() => reports.value.filter((item) => item.status
                     <td>{{ item.description }}</td>
                     <td>{{ item.reporterName }}</td>
                     <td>
-                      <select v-model="item.status">
+                      <select
+                        v-model="item.status"
+                        @change="
+                          pushUpdateData(
+                            item,
+                            store.currentType === 'postReports'
+                              ? copyPost[index]
+                              : copyActivityComment[index],
+                          )
+                        "
+                      >
                         <option>通過</option>
                         <option>駁回</option>
                         <option>待審核</option>
@@ -114,7 +235,17 @@ const pendingReports = computed(() => reports.value.filter((item) => item.status
                     <td>{{ item.description }}</td>
                     <td>{{ item.reporterName }}</td>
                     <td>
-                      <select v-model="item.status">
+                      <select
+                        v-model="item.status"
+                        @change="
+                          pushUpdateData(
+                            item,
+                            store.currentType === 'postReports'
+                              ? copyPost[index]
+                              : copyActivityComment[index],
+                          )
+                        "
+                      >
                         <option>通過</option>
                         <option>駁回</option>
                         <option>待審核</option>

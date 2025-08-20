@@ -5,8 +5,9 @@ import { useAuth } from '@/stores/auth'
 
 const router = useRouter()
 
-const username = ref('')
-const password = ref('')
+// 先暫存隨便一位的帳號密碼
+const username = ref('joika')
+const password = ref('123456')
 
 const auth = useAuth()
 

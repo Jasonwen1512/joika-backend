@@ -2,23 +2,73 @@
 import Content from '@/components/bar.vue'
 import Tab from '@/components/tab.vue'
 import { useStore } from '@/stores/data'
+import { useUpdate } from '@/stores/update'
 import { ref, computed, onMounted } from 'vue'
 
 const tabs = [{ title: '全部' }, { title: '待審核' }]
 
 const store = useStore()
+let copy = null
 
 onMounted(() => {
   store.currentType = 'members'
+  // copy 為資料原始狀態
+  copy = JSON.parse(JSON.stringify(store.filter.length ? store.filter : store.members))
+
+  // console.log(copy)
 })
 
 // 會員資料
 const members = computed(() => {
-  if (store.filter.length) return store.filter
-  else return store.members
+  return store.members.map((m) => {
+    const temp = update.updateMembers.find((u) => u.MEMBER_ID === m.MEMBER_ID)
+    return (
+      temp ?? {
+        MEMBER_ID: m.MEMBER_ID,
+        REGISTRATION_DATE: m.REGISTRATION_DATE,
+        MEMBER_NAME: m.MEMBER_NAME,
+        MEMBER_EMAIL: m.MEMBER_EMAIL,
+        MEMBER_PHONE: m.MEMBER_PHONE,
+        MEMBER_GENDER: m.MEMBER_GENDER,
+        MEMBER_STATUS: m.MEMBER_STATUS,
+      }
+    )
+  })
 })
 
 const pendingMembers = computed(() => members.value.filter((m) => m.MEMBER_STATUS === '待審核'))
+
+const update = useUpdate()
+
+const pushUpdateData = (m, c) => {
+  if (store.currentType === 'members') {
+    const existing = update.updateMembers.find((item) => item.MEMBER_ID === m.MEMBER_ID)
+
+    if (existing) {
+      // console.log(m.MEMBER_STATUS, c.MEMBER_STATUS)
+
+      if (m.MEMBER_STATUS === c.MEMBER_STATUS) {
+        // 改回原始值 → 從暫存陣列移除
+        update.updateMembers = update.updateMembers.filter((item) => item.MEMBER_ID !== m.MEMBER_ID)
+        // console.log('資料已恢復原本狀態，已從暫存移除')
+      } else {
+        // 不同 → 更新 status
+        existing.MEMBER_STATUS = m.MEMBER_STATUS
+        // console.log('資料已存在，更新 status')
+      }
+    } else {
+      update.updateMembers.push({
+        MEMBER_ID: m.MEMBER_ID,
+        REGISTRATION_DATE: m.REGISTRATION_DATE,
+        MEMBER_NAME: m.MEMBER_NAME,
+        MEMBER_EMAIL: m.MEMBER_EMAIL,
+        MEMBER_PHONE: m.MEMBER_PHONE,
+        MEMBER_GENDER: m.MEMBER_GENDER,
+        MEMBER_STATUS: m.MEMBER_STATUS,
+      })
+    }
+  }
+}
 </script>
 
 <template>
@@ -42,16 +92,19 @@ const pendingMembers = computed(() => members.value.filter((m) => m.MEMBER_STATU
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(member, index) in members" :key="index">
-                  <td>{{ member.MEMBER_ID }}</td>
-                  <td>{{ member.REGISTRATION_DATE }}</td>
-                  <td>{{ member.MEMBER_NAME }}</td>
-                  <td>{{ member.MEMBER_EMAIL }}</td>
-                  <td>{{ member.MEMBER_PHONE }}</td>
+                <tr v-for="(item, index) in members" :key="index">
+                  <td>{{ item.MEMBER_ID }}</td>
+                  <td>{{ item.REGISTRATION_DATE }}</td>
+                  <td>{{ item.MEMBER_NAME }}</td>
+                  <td>{{ item.MEMBER_EMAIL }}</td>
+                  <td>{{ item.MEMBER_PHONE }}</td>
 
-                  <td>{{ member.MEMBER_GENDER }}</td>
+                  <td>{{ item.MEMBER_GENDER }}</td>
                   <td>
-                    <select v-model="member.MEMBER_STATUS">
+                    <select
+                      v-model="item.MEMBER_STATUS"
+                      @change="pushUpdateData(item, copy[index])"
+                    >
                       <option value="已停權">已停權</option>
                       <option value="已通過">已通過</option>
                       <option value="待審核">待審核</option>
@@ -79,15 +132,18 @@ const pendingMembers = computed(() => members.value.filter((m) => m.MEMBER_STATU
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(member, index) in pendingMembers" :key="index">
-                  <td>{{ member.MEMBER_ID }}</td>
-                  <td>{{ member.REGISTRATION_DATE }}</td>
-                  <td>{{ member.MEMBER_NAME }}</td>
-                  <td>{{ member.MEMBER_EMAIL }}</td>
-                  <td>{{ member.MEMBER_PHONE }}</td>
-                  <td>{{ member.MEMBER_GENDER }}</td>
+                <tr v-for="(item, index) in pendingMembers" :key="index">
+                  <td>{{ item.MEMBER_ID }}</td>
+                  <td>{{ item.REGISTRATION_DATE }}</td>
+                  <td>{{ item.MEMBER_NAME }}</td>
+                  <td>{{ item.MEMBER_EMAIL }}</td>
+                  <td>{{ item.MEMBER_PHONE }}</td>
+                  <td>{{ item.MEMBER_GENDER }}</td>
                   <td>
-                    <select v-model="member.MEMBER_STATUS">
+                    <select
+                      v-model="item.MEMBER_STATUS"
+                      @change="pushUpdateData(item, copy[index])"
+                    >
                       <option value="已停權">已停權</option>
                       <option value="已通過">已通過</option>
                       <option value="待審核">待審核</option>

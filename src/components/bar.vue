@@ -89,7 +89,7 @@ const clearSearch = () => {
       v-if="store.filter.length && store.search"
       class="searchInfo alert alert-info position-absolute end-0"
     >
-      <span>搜尋 '{{ store.search }}' 中：共 {{ store.filter.length }} 筆資料</span>
+      <span>搜尋 '{{ store.search }}' 中：全部共 {{ store.filter.length }} 筆資料</span>
       <button class="btn btn-sm btn-outline-danger ms-3" @click="clearSearch">清除篩選</button>
     </div>
   </div>

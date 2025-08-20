@@ -2,22 +2,87 @@
 import Content from '@/components/bar.vue'
 import Tab from '@/components/tab.vue'
 import { useStore } from '@/stores/data'
+import { useUpdate } from '@/stores/update'
+import { useAuth } from '@/stores/auth'
 import { ref, computed, onMounted } from 'vue'
+
+const auth = useAuth()
 
 const tabs = [{ title: '全部' }, { title: '待處理' }]
 
 const store = useStore()
+let copy = null
 
 onMounted(() => {
   store.currentType = 'contacts'
+  // copy 為資料原始狀態
+  copy = JSON.parse(JSON.stringify(store.filter.length ? store.filter : store.contacts))
 })
 
 const contacts = computed(() => {
-  if (store.filter.length) return store.filter
-  else return store.contacts
+  return store.contacts.map((m) => {
+    const temp = update.updateContacts.find((u) => u.FORM_ID === m.FORM_ID)
+    return (
+      temp ?? {
+        FORM_ID: m.FORM_ID,
+        MEMBER_ID: m.MEMBER_ID,
+        MEMBER_PHONE: m.MEMBER_PHONE,
+        MEMBER_EMAIL: m.MEMBER_EMAIL,
+        FORM_CONTENT: m.FORM_CONTENT,
+        CREATED_AT: m.CREATED_AT,
+        NAME: m.NAME,
+        REPLY_CONTENT: m.REPLY_CONTENT,
+        REPLY_AT: m.REPLY_AT,
+        FORM_TITLE: m.FORM_TITLE,
+        FORM_STATUS: m.FORM_STATUS,
+        PROCESSED_BY: m.FORM_STATUS === '已處理' ? auth.currentUser : null,
+      }
+    )
+  })
 })
 
-const pendingcontacts = computed(() => contacts.value.filter((item) => item.status === '待處理'))
+const pendingcontacts = computed(() =>
+  contacts.value.filter((item) => item.FORM_STATUS === '待處理'),
+)
+
+const update = useUpdate()
+
+const pushUpdateData = (m, c) => {
+  if (store.currentType === 'contacts') {
+    const existing = update.updateContacts.find((item) => item.FORM_ID === m.FORM_ID)
+
+    if (existing) {
+      // console.log(m.MEMBER_STATUS, c.MEMBER_STATUS)
+
+      if (m.FORM_STATUS === c.FORM_STATUS) {
+        // 改回原始值 → 從暫存陣列移除
+        update.updateContacts = update.updateContacts.filter((item) => item.FORM_ID !== m.FORM_ID)
+
+        // console.log('資料已恢復原本狀態，已從暫存移除')
+      } else {
+        // 不同 → 更新 status
+        existing.FORM_STATUS = m.FORM_STATUS
+        existing.PROCESSED_BY = m.FORM_STATUS === '已處理' ? auth.currentUser : null
+        // console.log('資料已存在，更新 status')
+      }
+    } else {
+      update.updateContacts.push({
+        FORM_ID: m.FORM_ID,
+        MEMBER_ID: m.MEMBER_ID,
+        MEMBER_PHONE: m.MEMBER_PHONE,
+        MEMBER_EMAIL: m.MEMBER_EMAIL,
+        FORM_CONTENT: m.FORM_CONTENT,
+        CREATED_AT: m.CREATED_AT,
+        NAME: m.NAME,
+        REPLY_CONTENT: m.REPLY_CONTENT,
+        REPLY_AT: m.REPLY_AT,
+        FORM_TITLE: m.FORM_TITLE,
+        FORM_STATUS: m.FORM_STATUS,
+        PROCESSED_BY: m.FORM_STATUS === '已處理' ? auth.currentUser : null,
+      })
+    }
+  }
+}
 
 const selectedItem = ref(null)
 const replyMessage = ref('')
@@ -61,7 +126,10 @@ const handleSubmit = () => {
                     <td>{{ item.NAME }}</td>
                     <td>{{ item.FORM_TITLE }}</td>
                     <td>
-                      <select v-model="item.FORM_STATUS">
+                      <select
+                        v-model="item.FORM_STATUS"
+                        @change="pushUpdateData(item, copy[index])"
+                      >
                         <option>已處理</option>
                         <option>待處理</option>
                       </select>
@@ -69,6 +137,7 @@ const handleSubmit = () => {
                     <td>{{ item.PROCESSED_BY }}</td>
                     <td
                       class="reply"
+                      :class="{ 'disabled-cell': item.FORM_STATUS === '已處理' }"
                       data-bs-toggle="modal"
                       data-bs-target="#staticBackdrop"
                       @click="openModal(item)"
@@ -113,7 +182,10 @@ const handleSubmit = () => {
                     <td>{{ item.NAME }}</td>
                     <td>{{ item.FORM_TITLE }}</td>
                     <td>
-                      <select v-model="item.FORM_STATUS">
+                      <select
+                        v-model="item.FORM_STATUS"
+                        @change="pushUpdateData(item, copy[index])"
+                      >
                         <option>已處理</option>
                         <option>待處理</option>
                       </select>
@@ -121,6 +193,7 @@ const handleSubmit = () => {
                     <td>{{ item.PROCESSED_BY }}</td>
                     <td
                       class="reply"
+                      :class="{ 'disabled-cell': item.FORM_STATUS === '已處理' }"
                       data-bs-toggle="modal"
                       data-bs-target="#staticBackdrop"
                       @click="openModal(item)"
@@ -233,6 +306,13 @@ const handleSubmit = () => {
     path {
       fill: #4f8da8;
     }
+  }
+}
+
+.disabled-cell {
+  pointer-events: none; /* 禁止點擊 */
+  svg {
+    opacity: 0.3; /* 半透明效果 */
   }
 }
 </style>
