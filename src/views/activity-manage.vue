@@ -15,7 +15,10 @@ onMounted(() => {
 })
 
 const activitys = computed(() => {
-  return store.activitys.map((m) => {
+  // 如果有篩選結果，就用 store.filter，否則用 store.activitys
+  const base = store.filter.length ? store.filter : store.activitys
+
+  return base.map((m) => {
     const temp = update.updateActivitys.find((u) => u.ACTIVITY_NO === m.ACTIVITY_NO)
     return (
       temp ?? {

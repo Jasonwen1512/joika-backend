@@ -59,12 +59,14 @@ export const useStore = defineStore('data', () => {
         )
       case 'postReports':
         return target.filter(
-          (m) => m?.NAME.includes(search.value) || String(m?.POST_REPORT_NO).includes(search.value),
+          (m) =>
+            m?.REPORTER_NAME.includes(search.value) ||
+            String(m?.POST_REPORT_NO).includes(search.value),
         )
       case 'activityCommentReports':
         return target.filter(
           (m) =>
-            m?.NAME.includes(search.value) ||
+            m?.REPORTER_NAME.includes(search.value) ||
             String(m?.ACTIVITY_COMMENT_REPORT_ID).includes(search.value),
         )
       case 'activitys':

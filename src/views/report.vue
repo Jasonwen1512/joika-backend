@@ -16,34 +16,16 @@ let copyActivityComment = store.copyActivityCommentReports
 
 onMounted(() => {
   store.currentType = 'postReports'
-
-  // copyPost = store.postReports.map((r) => ({
-  //   id: r.POST_REPORT_NO,
-  //   createdAt: r.CREATED_AT,
-  //   reason: r.REASON,
-  //   description: r.REPORT_DESCRIPTION,
-  //   reporterName: r.REPORTER_NAME,
-  //   status: r.REPORT_STATUS,
-  //   admin: r.ADMIN_NAME ?? null,
-  // }))
-
-  // copyActivityComment = store.activityCommentReports.map((r) => ({
-  //   id: r.ACTIVITY_COMMENT_REPORT_ID,
-  //   createdAt: r.CREATED_AT,
-  //   reason: r.REASON,
-  //   description: r.REPORT_DESCRIPTION,
-  //   reporterName: r.REPORTER_NAME,
-  //   status: r.REPORT_STATUS,
-  //   admin: r.ADMIN_NAME ?? null,
-  // }))
-
-  // console.log(copyPost, copyActivityComment)
 })
 
 // 檢舉資料
 const reports = computed(() => {
+  let base = []
+
   if (store.currentType === 'postReports') {
-    return store.postReports.map((r) => {
+    base = store.filter.length ? store.filter : store.postReports
+
+    return base.map((r) => {
       const temp = update.updatePostReports.find((u) => u.id === r.POST_REPORT_NO)
       return (
         temp ?? {
@@ -57,8 +39,12 @@ const reports = computed(() => {
         }
       )
     })
-  } else if (store.currentType === 'activityCommentReports') {
-    return store.activityCommentReports.map((r) => {
+  }
+
+  if (store.currentType === 'activityCommentReports') {
+    base = store.filter.length ? store.filter : store.activityCommentReports
+
+    return base.map((r) => {
       const temp = update.updateActivityCommentReports.find(
         (u) => u.id === r.ACTIVITY_COMMENT_REPORT_ID,
       )
@@ -74,9 +60,9 @@ const reports = computed(() => {
         }
       )
     })
-  } else {
-    return []
   }
+
+  return []
 })
 
 const changeData = (data) => {

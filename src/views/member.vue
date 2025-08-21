@@ -19,7 +19,8 @@ onMounted(() => {
 
 // 會員資料
 const members = computed(() => {
-  return store.members.map((m) => {
+  const base = store.filter.length ? store.filter : store.members
+  return base.map((m) => {
     const temp = update.updateMembers.find((u) => u.MEMBER_ID === m.MEMBER_ID)
     return (
       temp ?? {

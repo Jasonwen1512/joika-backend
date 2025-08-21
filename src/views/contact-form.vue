@@ -18,7 +18,10 @@ onMounted(() => {
 })
 
 const contacts = computed(() => {
-  return store.contacts.map((m) => {
+  // 有篩選結果就用 store.filter，否則用 store.contacts
+  const base = store.filter.length ? store.filter : store.contacts
+
+  return base.map((m) => {
     const temp = update.updateContacts.find((u) => u.FORM_ID === m.FORM_ID)
     return (
       temp ?? {
