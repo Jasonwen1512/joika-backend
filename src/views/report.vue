@@ -11,31 +11,31 @@ const auth = useAuth()
 const tabs = [{ title: '全部' }, { title: '待審核' }]
 
 const store = useStore()
-let copyPost = null
-let copyActivityComment = null
+let copyPost = store.copyPostReports
+let copyActivityComment = store.copyActivityCommentReports
 
 onMounted(() => {
   store.currentType = 'postReports'
 
-  copyPost = store.postReports.map((r) => ({
-    id: r.POST_REPORT_NO,
-    createdAt: r.CREATED_AT,
-    reason: r.REASON,
-    description: r.REPORT_DESCRIPTION,
-    reporterName: r.REPORTER_NAME,
-    status: r.REPORT_STATUS,
-    admin: r.ADMIN_NAME ?? null,
-  }))
+  // copyPost = store.postReports.map((r) => ({
+  //   id: r.POST_REPORT_NO,
+  //   createdAt: r.CREATED_AT,
+  //   reason: r.REASON,
+  //   description: r.REPORT_DESCRIPTION,
+  //   reporterName: r.REPORTER_NAME,
+  //   status: r.REPORT_STATUS,
+  //   admin: r.ADMIN_NAME ?? null,
+  // }))
 
-  copyActivityComment = store.activityCommentReports.map((r) => ({
-    id: r.ACTIVITY_COMMENT_REPORT_ID,
-    createdAt: r.CREATED_AT,
-    reason: r.REASON,
-    description: r.REPORT_DESCRIPTION,
-    reporterName: r.REPORTER_NAME,
-    status: r.REPORT_STATUS,
-    admin: r.ADMIN_NAME ?? null,
-  }))
+  // copyActivityComment = store.activityCommentReports.map((r) => ({
+  //   id: r.ACTIVITY_COMMENT_REPORT_ID,
+  //   createdAt: r.CREATED_AT,
+  //   reason: r.REASON,
+  //   description: r.REPORT_DESCRIPTION,
+  //   reporterName: r.REPORTER_NAME,
+  //   status: r.REPORT_STATUS,
+  //   admin: r.ADMIN_NAME ?? null,
+  // }))
 
   // console.log(copyPost, copyActivityComment)
 })
@@ -101,6 +101,7 @@ const changeData = (data) => {
       status: r.REPORT_STATUS,
       admin: r.ADMIN_NAME ?? null,
     }))
+    console.log(copyActivityComment)
   }
 }
 
@@ -182,7 +183,7 @@ const pushUpdateData = (m, c) => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, index) in reports" :key="index">
+                  <tr v-for="(item, index) in reports" :key="item.id">
                     <td>{{ item.id }}</td>
                     <td>{{ item.createdAt }}</td>
                     <td>{{ item.reason }}</td>
@@ -195,8 +196,8 @@ const pushUpdateData = (m, c) => {
                           pushUpdateData(
                             item,
                             store.currentType === 'postReports'
-                              ? copyPost[index]
-                              : copyActivityComment[index],
+                              ? copyPost.find((c) => c.id === item.id)
+                              : copyActivityComment.find((c) => c.id === item.id),
                           )
                         "
                       >
@@ -228,7 +229,7 @@ const pushUpdateData = (m, c) => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, index) in pendingReports" :key="index">
+                  <tr v-for="(item, index) in pendingReports" :key="item.id">
                     <td>{{ item.id }}</td>
                     <td>{{ item.createdAt }}</td>
                     <td>{{ item.reason }}</td>
@@ -241,8 +242,8 @@ const pushUpdateData = (m, c) => {
                           pushUpdateData(
                             item,
                             store.currentType === 'postReports'
-                              ? copyPost[index]
-                              : copyActivityComment[index],
+                              ? copyPost.find((c) => c.id === item.id)
+                              : copyActivityComment.find((c) => c.id === item.id),
                           )
                         "
                       >

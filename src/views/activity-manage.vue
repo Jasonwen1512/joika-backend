@@ -8,12 +8,10 @@ import { ref, computed, onMounted } from 'vue'
 const tabs = [{ title: '全部' }, { title: '審核中' }]
 
 const store = useStore()
-let copy = null
+let copy = store.copyActivitys
 
 onMounted(() => {
   store.currentType = 'activitys'
-  // copy 為資料原始狀態
-  copy = JSON.parse(JSON.stringify(store.filter.length ? store.filter : store.activitys))
 })
 
 const activitys = computed(() => {
@@ -95,7 +93,7 @@ const pushUpdateData = (m, c) => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, index) in activitys" :key="index">
+                  <tr v-for="(item, index) in activitys" :key="item.ACTIVITY_NO">
                     <td>{{ item.ACTIVITY_NO }}</td>
                     <td>{{ item.CREATED_AT }}</td>
                     <td>{{ item.HOST_NAME }}</td>
@@ -105,7 +103,12 @@ const pushUpdateData = (m, c) => {
                     <td>
                       <select
                         v-model="item.ACTIVITY_STATUS"
-                        @change="pushUpdateData(item, copy[index])"
+                        @change="
+                          pushUpdateData(
+                            item,
+                            copy.find((c) => c.ACTIVITY_NO === item.ACTIVITY_NO),
+                          )
+                        "
                       >
                         <option>已取消</option>
                         <option>開團中</option>
@@ -136,7 +139,7 @@ const pushUpdateData = (m, c) => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, index) in pendingActivitys" :key="index">
+                  <tr v-for="(item, index) in pendingActivitys" :key="ACTIVITY_NO">
                     <td>{{ item.ACTIVITY_NO }}</td>
                     <td>{{ item.CREATED_AT }}</td>
                     <td>{{ item.HOST_NAME }}</td>
@@ -146,7 +149,12 @@ const pushUpdateData = (m, c) => {
                     <td>
                       <select
                         v-model="item.ACTIVITY_STATUS"
-                        @change="pushUpdateData(item, copy[index])"
+                        @change="
+                          pushUpdateData(
+                            item,
+                            copy.find((c) => c.ACTIVITY_NO === item.ACTIVITY_NO),
+                          )
+                        "
                       >
                         <option>已取消</option>
                         <option>開團中</option>

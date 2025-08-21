@@ -19,50 +19,19 @@ export const useStore = defineStore('data', () => {
   const search = ref('')
 
   const members = ref([])
-
-  // const reports = ref([
-  //   {
-  //     no: 1,
-  //     date: '2025/3/3',
-  //     type: '文章',
-  //     title: '一起去看電影',
-  //     reason: '不當言論',
-  //     description: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-  //     name: '陳陳',
-  //     status: '已隱藏',
-  //     admin: 'ADMIN',
-  //   },
-  //   {
-  //     no: 2,
-  //     date: '2025/3/3',
-  //     type: '活動',
-  //     title: '一起去看電影',
-  //     reason: '騷擾行為',
-  //     description: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-  //     name: '陳陳',
-  //     status: '已駁回',
-  //     admin: 'ADMIN',
-  //   },
-  //   {
-  //     no: 3,
-  //     date: '2025/3/3',
-  //     type: '文章',
-  //     title: '一起去看電影',
-  //     reason: '散佈個資',
-  //     description: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-  //     name: '陳陳',
-  //     status: '待審核',
-  //     admin: '',
-  //   },
-  // ])
+  const copyMembers = ref([])
 
   const postReports = ref([])
+  const copyPostReports = ref([])
 
   const activityCommentReports = ref([])
+  const copyActivityCommentReports = ref([])
 
   const contacts = ref([])
+  const copyContacts = ref([])
 
   const activitys = ref([])
+  const copyActivitys = ref([])
 
   const currentType = ref('')
 
@@ -110,10 +79,6 @@ export const useStore = defineStore('data', () => {
       default:
         break
     }
-
-    // return target.filter(
-    //   (m) => m.name.includes(search.value) || String(m.no).includes(search.value),
-    // )
   })
 
   // 分別建立 async 函式抓取資料
@@ -121,26 +86,78 @@ export const useStore = defineStore('data', () => {
   const fetchMembers = async () => {
     const res = await axios.get(`${VITE_API_BASE}/admin/members/list.php`)
     members.value = res.data
+    copyMembers.value = JSON.parse(JSON.stringify(members.value))
   }
 
   const fetchPostReports = async () => {
     const res = await axios.get(`${VITE_API_BASE}/admin/members/post-report.php`)
     postReports.value = res.data
+
+    copyPostReports.value = postReports.value.map((r) => ({
+      id: r.POST_REPORT_NO,
+      createdAt: r.CREATED_AT,
+      reason: r.REASON,
+      description: r.REPORT_DESCRIPTION,
+      reporterName: r.REPORTER_NAME,
+      status: r.REPORT_STATUS,
+      admin: r.ADMIN_NAME ?? null,
+    }))
   }
 
   const fetchActivityCommentReports = async () => {
     const res = await axios.get(`${VITE_API_BASE}/admin/activities/commment-report.php`)
     activityCommentReports.value = res.data
+
+    copyActivityCommentReports.value = activityCommentReports.value.map((r) => ({
+      id: r.ACTIVITY_COMMENT_REPORT_ID,
+      createdAt: r.CREATED_AT,
+      reason: r.REASON,
+      description: r.REPORT_DESCRIPTION,
+      reporterName: r.REPORTER_NAME,
+      status: r.REPORT_STATUS,
+      admin: r.ADMIN_NAME ?? null,
+    }))
+    console.log('copyActivityCommentReports', copyActivityCommentReports.value)
+    console.log(activityCommentReports.value)
   }
 
   const fetchContacts = async () => {
     const res = await axios.get(`${VITE_API_BASE}/admin/form.php`)
     contacts.value = res.data
+    copyContacts.value = JSON.parse(JSON.stringify(contacts.value))
   }
 
   const fetchActivitys = async () => {
     const res = await axios.get(`${VITE_API_BASE}/admin/activities/manage.php`)
     activitys.value = res.data
+    copyActivitys.value = JSON.parse(JSON.stringify(activitys.value))
+  }
+
+  const refreshAllCopy = () => {
+    copyMembers.value = JSON.parse(JSON.stringify(members.value))
+
+    copyPostReports.value = postReports.value.map((r) => ({
+      id: r.POST_REPORT_NO,
+      createdAt: r.CREATED_AT,
+      reason: r.REASON,
+      description: r.REPORT_DESCRIPTION,
+      reporterName: r.REPORTER_NAME,
+      status: r.REPORT_STATUS,
+      admin: r.ADMIN_NAME ?? null,
+    }))
+
+    copyActivityCommentReports.value = activityCommentReports.value.map((r) => ({
+      id: r.ACTIVITY_COMMENT_REPORT_ID,
+      createdAt: r.CREATED_AT,
+      reason: r.REASON,
+      description: r.REPORT_DESCRIPTION,
+      reporterName: r.REPORTER_NAME,
+      status: r.REPORT_STATUS,
+      admin: r.ADMIN_NAME ?? null,
+    }))
+
+    copyContacts.value = JSON.parse(JSON.stringify(contacts.value))
+    copyActivitys.value = JSON.parse(JSON.stringify(activitys.value))
   }
 
   fetchMembers()
@@ -152,10 +169,15 @@ export const useStore = defineStore('data', () => {
   return {
     search,
     members,
+    copyMembers,
     postReports,
+    copyPostReports,
     activityCommentReports,
+    copyActivityCommentReports,
     contacts,
+    copyContacts,
     activitys,
+    copyActivitys,
     currentType,
     filter,
     fetchMembers,
@@ -163,5 +185,6 @@ export const useStore = defineStore('data', () => {
     fetchActivityCommentReports,
     fetchContacts,
     fetchActivitys,
+    refreshAllCopy,
   }
 })

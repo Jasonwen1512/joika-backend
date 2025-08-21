@@ -11,12 +11,10 @@ const auth = useAuth()
 const tabs = [{ title: '全部' }, { title: '待處理' }]
 
 const store = useStore()
-let copy = null
+let copy = store.copyContacts
 
 onMounted(() => {
   store.currentType = 'contacts'
-  // copy 為資料原始狀態
-  copy = JSON.parse(JSON.stringify(store.filter.length ? store.filter : store.contacts))
 })
 
 const contacts = computed(() => {
@@ -120,7 +118,7 @@ const handleSubmit = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, index) in contacts" :key="index">
+                  <tr v-for="(item, index) in contacts" :key="item.FORM_ID">
                     <td>{{ item.FORM_ID }}</td>
                     <td>{{ item.CREATED_AT }}</td>
                     <td>{{ item.NAME }}</td>
@@ -128,7 +126,12 @@ const handleSubmit = () => {
                     <td>
                       <select
                         v-model="item.FORM_STATUS"
-                        @change="pushUpdateData(item, copy[index])"
+                        @change="
+                          pushUpdateData(
+                            item,
+                            copy.find((c) => c.FORM_ID === item.FORM_ID),
+                          )
+                        "
                       >
                         <option>已處理</option>
                         <option>待處理</option>
@@ -176,7 +179,7 @@ const handleSubmit = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, index) in pendingcontacts" :key="index">
+                  <tr v-for="(item, index) in pendingcontacts" :key="item.FORM_ID">
                     <td>{{ item.FORM_ID }}</td>
                     <td>{{ item.CREATED_AT }}</td>
                     <td>{{ item.NAME }}</td>
@@ -184,7 +187,12 @@ const handleSubmit = () => {
                     <td>
                       <select
                         v-model="item.FORM_STATUS"
-                        @change="pushUpdateData(item, copy[index])"
+                        @change="
+                          pushUpdateData(
+                            item,
+                            copy.find((c) => c.FORM_ID === item.FORM_ID),
+                          )
+                        "
                       >
                         <option>已處理</option>
                         <option>待處理</option>

@@ -8,12 +8,11 @@ import { ref, computed, onMounted } from 'vue'
 const tabs = [{ title: '全部' }, { title: '待審核' }]
 
 const store = useStore()
-let copy = null
+let copy = store.copyMembers
 
 onMounted(() => {
   store.currentType = 'members'
   // copy 為資料原始狀態
-  copy = JSON.parse(JSON.stringify(store.filter.length ? store.filter : store.members))
 
   // console.log(copy)
 })
@@ -92,7 +91,7 @@ const pushUpdateData = (m, c) => {
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(item, index) in members" :key="index">
+                <tr v-for="(item, index) in members" :key="item.MEMBER_ID">
                   <td>{{ item.MEMBER_ID }}</td>
                   <td>{{ item.REGISTRATION_DATE }}</td>
                   <td>{{ item.MEMBER_NAME }}</td>
@@ -103,7 +102,12 @@ const pushUpdateData = (m, c) => {
                   <td>
                     <select
                       v-model="item.MEMBER_STATUS"
-                      @change="pushUpdateData(item, copy[index])"
+                      @change="
+                        pushUpdateData(
+                          item,
+                          copy.find((c) => c.MEMBER_ID === item.MEMBER_ID),
+                        )
+                      "
                     >
                       <option value="已停權">已停權</option>
                       <option value="已通過">已通過</option>
@@ -132,7 +136,7 @@ const pushUpdateData = (m, c) => {
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(item, index) in pendingMembers" :key="index">
+                <tr v-for="(item, index) in pendingMembers" :key="item.MEMBER_ID">
                   <td>{{ item.MEMBER_ID }}</td>
                   <td>{{ item.REGISTRATION_DATE }}</td>
                   <td>{{ item.MEMBER_NAME }}</td>
@@ -142,7 +146,12 @@ const pushUpdateData = (m, c) => {
                   <td>
                     <select
                       v-model="item.MEMBER_STATUS"
-                      @change="pushUpdateData(item, copy[index])"
+                      @change="
+                        pushUpdateData(
+                          item,
+                          copy.find((c) => c.MEMBER_ID === item.MEMBER_ID),
+                        )
+                      "
                     >
                       <option value="已停權">已停權</option>
                       <option value="已通過">已通過</option>

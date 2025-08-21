@@ -1,6 +1,9 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+// import { useStore } from '@/stores/data'
+
+// const store = useStore()
 
 // 環境變數
 const VITE_API_BASE = import.meta.env.VITE_API_BASE

@@ -2,7 +2,8 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import Banner from '@/components/banner.vue'
-import { useUpdate } from './stores/update'
+import { useUpdate } from '@/stores/update'
+import { useStore } from '@/stores/data'
 
 // 使用 computed 讓它對 route.name 做響應式判斷
 const route = useRoute()
@@ -10,6 +11,12 @@ const showBanner = computed(() => route.path === '/')
 const isHome = computed(() => route.path === '/home')
 
 const update = useUpdate()
+
+const store = useStore()
+
+// console.log(store.copyPostReports, store.postReports)
+
+console.log(store.copyActivityCommentReports, store.activityCommentReports)
 </script>
 
 <template>
@@ -91,14 +98,21 @@ const update = useUpdate()
                             </tr>
                           </thead>
                           <tbody>
-                            <tr v-for="(item, index) in update.updateMembers" :key="index">
+                            <tr v-for="(item, index) in update.updateMembers" :key="MEMBER_ID">
                               <td>{{ item.MEMBER_ID }}</td>
                               <td>{{ item.REGISTRATION_DATE }}</td>
                               <td>{{ item.MEMBER_NAME }}</td>
                               <td>{{ item.MEMBER_EMAIL }}</td>
                               <td>{{ item.MEMBER_PHONE }}</td>
                               <td>{{ item.MEMBER_GENDER }}</td>
-                              <td>{{ item.MEMBER_STATUS }}</td>
+                              <td>
+                                {{
+                                  store.copyMembers.find((c) => c.MEMBER_ID === item.MEMBER_ID)
+                                    ?.MEMBER_STATUS
+                                }}
+                                →
+                                {{ item.MEMBER_STATUS }}
+                              </td>
                               <!-- 單純顯示 -->
                             </tr>
                           </tbody>
@@ -148,14 +162,34 @@ const update = useUpdate()
                             </tr>
                           </thead>
                           <tbody>
-                            <tr v-for="(item, index) in update.updatePostReports" :key="index">
+                            <tr v-for="(item, index) in update.updatePostReports" :key="item.id">
                               <td>{{ item.id }}</td>
                               <td>{{ item.createdAt }}</td>
                               <td>{{ item.reason }}</td>
                               <td>{{ item.description }}</td>
                               <td>{{ item.reporterName }}</td>
-                              <td>{{ item.status }}</td>
-                              <td>{{ item.admin }}</td>
+                              <td>
+                                {{ store.copyPostReports.find((c) => c.id === item.id)?.status }} →
+                                {{ item.status }}
+                              </td>
+                              <td>
+                                <span
+                                  :class="{
+                                    'empty-admin':
+                                      store.copyPostReports.find((c) => c.id === item.id)?.admin ===
+                                      null,
+                                  }"
+                                >
+                                  {{
+                                    store.copyPostReports.find((c) => c.id === item.id)?.admin ??
+                                    '無'
+                                  }}
+                                </span>
+                                →
+                                <span :class="{ 'empty-admin': item.admin == null }">
+                                  {{ item.admin ?? '無' }}
+                                </span>
+                              </td>
                               <!-- 單純顯示 -->
                             </tr>
                           </tbody>
@@ -178,11 +212,10 @@ const update = useUpdate()
                       aria-expanded="false"
                       aria-controls="collapseThree"
                     >
-                      文章留言檢舉<span
-                        class="amount"
-                        v-if="update.updateActivityCommentReports.length"
-                        >{{ update.updateActivityCommentReports.length }}</span
-                      >
+                      文章留言檢舉
+                      <span class="amount" v-if="update.updateActivityCommentReports.length">{{
+                        update.updateActivityCommentReports.length
+                      }}</span>
                     </button>
                   </h2>
                   <div
@@ -208,15 +241,42 @@ const update = useUpdate()
                           <tbody>
                             <tr
                               v-for="(item, index) in update.updateActivityCommentReports"
-                              :key="index"
+                              :key="item.id"
                             >
                               <td>{{ item.id }}</td>
                               <td>{{ item.createdAt }}</td>
                               <td>{{ item.reason }}</td>
                               <td>{{ item.description }}</td>
                               <td>{{ item.reporterName }}</td>
-                              <td>{{ item.status }}</td>
-                              <td>{{ item.admin }}</td>
+                              <td>
+                                {{
+                                  store.copyActivityCommentReports.find((c) => c.id === item.id)
+                                    ?.status ?? '無'
+                                }}
+
+                                →
+                                <span :class="{ 'empty-admin': item.status == null }">
+                                  {{ item.status ?? '無' }}
+                                </span>
+                              </td>
+                              <td>
+                                <span
+                                  :class="{
+                                    'empty-admin':
+                                      store.copyActivityCommentReports.find((c) => c.id === item.id)
+                                        ?.admin == null,
+                                  }"
+                                >
+                                  {{
+                                    store.copyActivityCommentReports.find((c) => c.id === item.id)
+                                      ?.admin ?? '無'
+                                  }}
+                                </span>
+                                →
+                                <span :class="{ 'empty-admin': item.admin == null }">
+                                  {{ item.admin ?? '無' }}
+                                </span>
+                              </td>
                               <!-- 單純顯示 -->
                             </tr>
                           </tbody>
@@ -272,7 +332,15 @@ const update = useUpdate()
                               <td>{{ item.ACTIVITY_NAME }}</td>
                               <td>{{ item.REGISTRATION_DEADLINE }}</td>
                               <td>{{ item.CURRENT_PARTICIPANT }} / {{ item.MAX_PARTICIPANT }}</td>
-                              <td>{{ item.ACTIVITY_STATUS }}</td>
+                              <td>
+                                {{
+                                  store.copyActivitys.find(
+                                    (c) => c.ACTIVITY_NO === item.ACTIVITY_NO,
+                                  )?.ACTIVITY_STATUS
+                                }}
+                                →
+                                {{ item.ACTIVITY_STATUS }}
+                              </td>
                               <!-- 單純顯示 -->
                             </tr>
                           </tbody>
@@ -325,8 +393,35 @@ const update = useUpdate()
                               <td>{{ item.CREATED_AT }}</td>
                               <td>{{ item.NAME }}</td>
                               <td>{{ item.FORM_TITLE }}</td>
-                              <td>{{ item.FORM_STATUS }}</td>
-                              <td>{{ item.PROCESSED_BY }}</td>
+                              <td>
+                                {{
+                                  store.copyContacts.find((c) => c.FORM_ID === item.FORM_ID)
+                                    ?.FORM_STATUS ?? '無'
+                                }}
+
+                                →
+                                <span :class="{ 'empty-admin': item.FORM_STATUS == null }">
+                                  {{ item.FORM_STATUS ?? '無' }}
+                                </span>
+                              </td>
+                              <td>
+                                <span
+                                  :class="{
+                                    'empty-admin':
+                                      store.copyContacts.find((c) => c.FORM_ID === item.FORM_ID)
+                                        ?.PROCESSED_BY == null,
+                                  }"
+                                >
+                                  {{
+                                    store.copyContacts.find((c) => c.FORM_ID === item.FORM_ID)
+                                      ?.PROCESSED_BY ?? '無'
+                                  }}
+                                </span>
+                                →
+                                <span :class="{ 'empty-admin': item.PROCESSED_BY == null }">
+                                  {{ item.PROCESSED_BY ?? '無' }}
+                                </span>
+                              </td>
                               <!-- 單純顯示 -->
                             </tr>
                           </tbody>
@@ -409,5 +504,10 @@ table.table th {
 .amount {
   color: #dc3545;
   margin-left: 10px;
+}
+
+.empty-admin {
+  color: gray;
+  font-style: italic;
 }
 </style>
