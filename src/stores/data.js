@@ -117,8 +117,6 @@ export const useStore = defineStore('data', () => {
       status: r.REPORT_STATUS,
       admin: r.ADMIN_NAME ?? null,
     }))
-    console.log('copyActivityCommentReports', copyActivityCommentReports.value)
-    console.log(activityCommentReports.value)
   }
 
   const fetchContacts = async () => {

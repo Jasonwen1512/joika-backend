@@ -16,7 +16,7 @@ const store = useStore()
 
 // console.log(store.copyPostReports, store.postReports)
 
-console.log(store.copyActivityCommentReports, store.activityCommentReports)
+// console.log(store.copyActivityCommentReports, store.activityCommentReports)
 </script>
 
 <template>
@@ -98,7 +98,7 @@ console.log(store.copyActivityCommentReports, store.activityCommentReports)
                             </tr>
                           </thead>
                           <tbody>
-                            <tr v-for="(item, index) in update.updateMembers" :key="MEMBER_ID">
+                            <tr v-for="(item, index) in update.updateMembers" :key="item.MEMBER_ID">
                               <td>{{ item.MEMBER_ID }}</td>
                               <td>{{ item.REGISTRATION_DATE }}</td>
                               <td>{{ item.MEMBER_NAME }}</td>

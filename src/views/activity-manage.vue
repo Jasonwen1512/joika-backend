@@ -139,7 +139,7 @@ const pushUpdateData = (m, c) => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, index) in pendingActivitys" :key="ACTIVITY_NO">
+                  <tr v-for="(item, index) in pendingActivitys" :key="item.ACTIVITY_NO">
                     <td>{{ item.ACTIVITY_NO }}</td>
                     <td>{{ item.CREATED_AT }}</td>
                     <td>{{ item.HOST_NAME }}</td>

@@ -101,7 +101,7 @@ const changeData = (data) => {
       status: r.REPORT_STATUS,
       admin: r.ADMIN_NAME ?? null,
     }))
-    console.log(copyActivityComment)
+    // console.log(copyActivityComment)
   }
 }
 
