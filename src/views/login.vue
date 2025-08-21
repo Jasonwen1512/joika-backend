@@ -86,9 +86,9 @@ const onLogin = async () => {
           />
         </div>
 
-        <div class="text-end">
+        <!-- <div class="text-end">
           <a href="#" class="forget-password">忘記密碼</a>
-        </div>
+        </div> -->
 
         <div class="d-flex justify-content-between gap-4 pt-4">
           <button type="submit" class="submit btn w-50">登入</button>

@@ -87,7 +87,6 @@ const changeData = (data) => {
       status: r.REPORT_STATUS,
       admin: r.ADMIN_NAME ?? null,
     }))
-    // console.log(copyActivityComment)
   }
 }
 
@@ -253,14 +252,14 @@ const pushUpdateData = (m, c) => {
           :class="{ active: store.currentType === 'postReports' }"
           @click="changeData('postReports')"
         >
-          活動檢舉
+          文章留言檢舉
         </button>
         <button
           class="comment"
           :class="{ active: store.currentType === 'activityCommentReports' }"
           @click="changeData('activityCommentReports')"
         >
-          文章留言檢舉
+          活動留言檢舉
         </button>
       </div>
     </div>

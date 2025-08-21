@@ -124,7 +124,7 @@ const store = useStore()
                   </div>
                 </div>
 
-                <!-- 第二個：活動檢舉 -->
+                <!-- 第二個：活動留言檢舉 -->
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="headingTwo">
                     <button
@@ -135,7 +135,7 @@ const store = useStore()
                       aria-expanded="false"
                       aria-controls="collapseTwo"
                     >
-                      活動檢舉
+                      活動留言檢舉
                       <span class="amount" v-if="update.updatePostReports.length">{{
                         update.updatePostReports.length
                       }}</span>
@@ -436,7 +436,12 @@ const store = useStore()
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-              <button type="button" class="btn btn-success" @click="update.updateStart">
+              <button
+                type="button"
+                class="btn btn-success"
+                data-bs-dismiss="modal"
+                @click="update.updateStart"
+              >
                 送出
               </button>
             </div>

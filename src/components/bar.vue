@@ -5,6 +5,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
 import { ref, computed, watch } from 'vue'
+import Swal from 'sweetalert2'
 
 import { useStore } from '@/stores/data'
 
@@ -55,7 +56,12 @@ const doSearch = () => {
     // console.log(store.filter)
 
     if (!store.filter.length) {
-      alert('沒有找到符合條件的資料')
+      Swal.fire({
+        icon: 'error',
+        title: '沒有找到符合條件的資料',
+        showConfirmButton: false,
+        timer: 1000,
+      })
     }
   }
   searchInput.value = ''

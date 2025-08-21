@@ -158,6 +158,12 @@ export const useStore = defineStore('data', () => {
 
     copyContacts.value = JSON.parse(JSON.stringify(contacts.value))
     copyActivitys.value = JSON.parse(JSON.stringify(activitys.value))
+
+    fetchMembers()
+    fetchPostReports()
+    fetchActivityCommentReports()
+    fetchContacts()
+    fetchActivitys()
   }
 
   fetchMembers()
