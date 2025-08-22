@@ -80,6 +80,7 @@ const pushUpdateData = (m, c) => {
         FORM_TITLE: m.FORM_TITLE,
         FORM_STATUS: m.FORM_STATUS,
         PROCESSED_BY: m.FORM_STATUS === '已處理' ? auth.currentUser : null,
+        PROCESSED_NAME: m.PROCESSED_NAME,
       })
     }
   }
@@ -95,7 +96,38 @@ const openModal = (item) => {
 
 // 送出後的處理放這
 const handleSubmit = () => {
-  selectedItem.reply = replyMessage
+  if (!selectedItem.value || replyMessage.value.trim() === '') return
+
+  const c = copy.find((c) => c.FORM_ID === selectedItem.value.FORM_ID)
+
+  const updated = {
+    ...selectedItem.value,
+    FORM_STATUS: '已處理',
+    REPLY_CONTENT: replyMessage.value,
+    PROCESSED_NAME: auth.currentUser,
+  }
+
+  const idx = update.updateContacts.findIndex((u) => u.FORM_ID === updated.FORM_ID)
+  if (idx !== -1) {
+    update.updateContacts[idx] = updated
+  } else {
+    update.updateContacts.push(updated)
+  }
+
+  if (idx !== -1) {
+    contacts.value[idx] = {
+      ...contacts.value[idx],
+      FORM_STATUS: '已處理',
+      reply: replyMessage.value,
+    }
+  }
+
+  selectedItem.value.FORM_STATUS = '已處理'
+  selectedItem.value.REPLY_CONTENT = replyMessage.value.trim()
+
+  // 自己新增欄位PROCESSED_NAME = 處理員工的姓名
+  // 之後用FORM_ID、FORM_STATUS、PROCESSED_NAME、REPLY_CONTENT帶入API
+  selectedItem.value.PROCESSED_NAME = auth.currentUser
   console.log(selectedItem.value)
 }
 </script>
@@ -126,7 +158,8 @@ const handleSubmit = () => {
                     <td>{{ item.CREATED_AT }}</td>
                     <td>{{ item.NAME }}</td>
                     <td>{{ item.FORM_TITLE }}</td>
-                    <td>
+                    <td>{{ item.FORM_STATUS }}</td>
+                    <!-- <td>
                       <select
                         v-model="item.FORM_STATUS"
                         @change="
@@ -139,8 +172,8 @@ const handleSubmit = () => {
                         <option>已處理</option>
                         <option>待處理</option>
                       </select>
-                    </td>
-                    <td>{{ item.PROCESSED_BY }}</td>
+                    </td> -->
+                    <td>{{ item.PROCESSED_NAME }}</td>
                     <td
                       class="reply"
                       :class="{ 'disabled-cell': item.FORM_STATUS === '已處理' }"
@@ -187,7 +220,8 @@ const handleSubmit = () => {
                     <td>{{ item.CREATED_AT }}</td>
                     <td>{{ item.NAME }}</td>
                     <td>{{ item.FORM_TITLE }}</td>
-                    <td>
+                    <td>{{ item.FORM_STATUS }}</td>
+                    <!-- <td>
                       <select
                         v-model="item.FORM_STATUS"
                         @change="
@@ -200,8 +234,8 @@ const handleSubmit = () => {
                         <option>已處理</option>
                         <option>待處理</option>
                       </select>
-                    </td>
-                    <td>{{ item.PROCESSED_BY }}</td>
+                    </td> -->
+                    <td>{{ item.PROCESSED_NAME }}</td>
                     <td
                       class="reply"
                       :class="{ 'disabled-cell': item.FORM_STATUS === '已處理' }"

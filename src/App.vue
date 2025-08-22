@@ -409,17 +409,17 @@ const store = useStore()
                                   :class="{
                                     'empty-admin':
                                       store.copyContacts.find((c) => c.FORM_ID === item.FORM_ID)
-                                        ?.PROCESSED_BY == null,
+                                        ?.PROCESSED_NAME == null,
                                   }"
                                 >
                                   {{
                                     store.copyContacts.find((c) => c.FORM_ID === item.FORM_ID)
-                                      ?.PROCESSED_BY ?? '無'
+                                      ?.PROCESSED_NAME ?? '無'
                                   }}
                                 </span>
                                 →
-                                <span :class="{ 'empty-admin': item.PROCESSED_BY == null }">
-                                  {{ item.PROCESSED_BY ?? '無' }}
+                                <span :class="{ 'empty-admin': item.PROCESSED_NAME == null }">
+                                  {{ item.PROCESSED_NAME ?? '無' }}
                                 </span>
                               </td>
                               <!-- 單純顯示 -->

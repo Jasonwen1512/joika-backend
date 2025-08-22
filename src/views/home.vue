@@ -13,10 +13,10 @@ const store = useStore()
 const needHandle = computed(() => {
   const pendingMembers = store.members.filter((m) => m.MEMBER_STATUS === '待審核')
 
-  const pendingPostReports = store.postReports.filter((item) => item.status === '待審核')
+  const pendingPostReports = store.postReports.filter((item) => item.REPORT_STATUS === '待審核')
 
   const pendingActivityCommentReports = store.activityCommentReports.filter(
-    (item) => item.status === '待審核',
+    (item) => item.REPORT_STATUS === '待審核',
   )
 
   const pendingActivitys = store.activitys.filter((item) => item.ACTIVITY_STATUS === '審核中')
