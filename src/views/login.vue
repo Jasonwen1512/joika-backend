@@ -5,9 +5,8 @@ import { useAuth } from '@/stores/auth'
 
 const router = useRouter()
 
-// 先暫存隨便一位的帳號密碼
-const username = ref('joika')
-const password = ref('123456')
+const username = ref('')
+const password = ref('')
 
 const auth = useAuth()
 
@@ -55,6 +54,10 @@ const onLogin = async () => {
 // const a = () => {
 //   console.log(username.value, password.value)
 // }
+
+const goToWebsite = () => {
+  window.location.href = 'https://tibamef2e.com/cjd101/g2/front/'
+}
 </script>
 
 <template>
@@ -92,7 +95,7 @@ const onLogin = async () => {
 
         <div class="d-flex justify-content-between gap-4 pt-4">
           <button type="submit" class="submit btn w-50">登入</button>
-          <button type="button" class="signup btn w-50">前往網站</button>
+          <button type="button" class="signup btn w-50" @click="goToWebsite">前往網站</button>
         </div>
       </form>
     </div>

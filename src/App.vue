@@ -385,6 +385,7 @@ const store = useStore()
                               <th>問題標題</th>
                               <th>狀態</th>
                               <th>處理人員</th>
+                              <th>回覆內容</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -421,6 +422,15 @@ const store = useStore()
                                 <span :class="{ 'empty-admin': item.PROCESSED_NAME == null }">
                                   {{ item.PROCESSED_NAME ?? '無' }}
                                 </span>
+                              </td>
+                              <td>
+                                <textarea
+                                  name=""
+                                  id=""
+                                  readonly
+                                  class="reply-content form-control"
+                                  >{{ item.REPLY_CONTENT ?? '無' }}</textarea
+                                >
                               </td>
                               <!-- 單純顯示 -->
                             </tr>
@@ -514,5 +524,16 @@ table.table th {
 .empty-admin {
   color: gray;
   font-style: italic;
+}
+
+.reply-content {
+  width: 100%; /* 滿寬 */
+  height: auto; /* 高度自動 */
+  min-height: 1em; /* 避免空白時太小 */
+  border: none; /* 移除邊框 */
+  background: transparent; /* 背景透明 */
+  resize: none; /* 不能拉伸 */
+  font: inherit; /* 字型與父元素一致 */
+  padding: 0;
 }
 </style>

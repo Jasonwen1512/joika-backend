@@ -37,6 +37,7 @@ const contacts = computed(() => {
         FORM_TITLE: m.FORM_TITLE,
         FORM_STATUS: m.FORM_STATUS,
         PROCESSED_BY: m.FORM_STATUS === '已處理' ? auth.currentUser : null,
+        PROCESSED_NAME: m.PROCESSED_NAME,
       }
     )
   })
@@ -63,7 +64,7 @@ const pushUpdateData = (m, c) => {
       } else {
         // 不同 → 更新 status
         existing.FORM_STATUS = m.FORM_STATUS
-        existing.PROCESSED_BY = m.FORM_STATUS === '已處理' ? auth.currentUser : null
+        existing.PROCESSED_BY = null
         // console.log('資料已存在，更新 status')
       }
     } else {
@@ -79,9 +80,10 @@ const pushUpdateData = (m, c) => {
         REPLY_AT: m.REPLY_AT,
         FORM_TITLE: m.FORM_TITLE,
         FORM_STATUS: m.FORM_STATUS,
-        PROCESSED_BY: m.FORM_STATUS === '已處理' ? auth.currentUser : null,
+        PROCESSED_BY: null,
         PROCESSED_NAME: m.PROCESSED_NAME,
       })
+      // console.log(update.updateContacts)
     }
   }
 }
@@ -100,35 +102,36 @@ const handleSubmit = () => {
 
   const c = copy.find((c) => c.FORM_ID === selectedItem.value.FORM_ID)
 
-  const updated = {
-    ...selectedItem.value,
-    FORM_STATUS: '已處理',
-    REPLY_CONTENT: replyMessage.value,
-    PROCESSED_NAME: auth.currentUser,
-  }
+  // const updated = {
+  //   ...selectedItem.value,
+  //   FORM_STATUS: '已處理',
+  //   REPLY_CONTENT: replyMessage.value,
+  //   PROCESSED_NAME: auth.currentUser,
+  // }
 
-  const idx = update.updateContacts.findIndex((u) => u.FORM_ID === updated.FORM_ID)
-  if (idx !== -1) {
-    update.updateContacts[idx] = updated
-  } else {
-    update.updateContacts.push(updated)
-  }
+  // const idx = update.updateContacts.findIndex((u) => u.FORM_ID === updated.FORM_ID)
+  // if (idx !== -1) {
+  //   update.updateContacts[idx] = updated
+  // } else {
+  //   update.updateContacts.push(updated)
+  // }
 
-  if (idx !== -1) {
-    contacts.value[idx] = {
-      ...contacts.value[idx],
-      FORM_STATUS: '已處理',
-      reply: replyMessage.value,
-    }
-  }
+  // if (idx !== -1) {
+  //   contacts.value[idx] = {
+  //     ...contacts.value[idx],
+  //     FORM_STATUS: '已處理',
+  //     reply: replyMessage.value,
+  //   }
+  // }
 
   selectedItem.value.FORM_STATUS = '已處理'
   selectedItem.value.REPLY_CONTENT = replyMessage.value.trim()
 
   // 自己新增欄位PROCESSED_NAME = 處理員工的姓名
-  // 之後用FORM_ID、FORM_STATUS、PROCESSED_NAME、REPLY_CONTENT帶入API
+  // 之後用FORM_ID、FORM_STATUS、PROCESSED_NAME、REPLY_CONTENT帶入更新的API
   selectedItem.value.PROCESSED_NAME = auth.currentUser
-  console.log(selectedItem.value)
+
+  pushUpdateData(selectedItem.value, c)
 }
 </script>
 

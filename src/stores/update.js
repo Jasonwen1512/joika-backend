@@ -96,7 +96,21 @@ export const useUpdate = defineStore('update', () => {
       }
     }
     if (updateContacts.value.length) {
-      console.log(updateContacts.value)
+      // console.log(updateContacts.value)
+      try {
+        const res = await axios.patch(
+          `${VITE_API_BASE}/admin/update/contact.php`,
+          updateContacts.value,
+        )
+        if (res.data.success) {
+          console.log('聯絡表單狀態更新成功', res.data.message)
+          updateContacts.value = []
+        } else {
+          console.error('聯絡表單狀態更新失敗', res.data.error || res.data.errors)
+        }
+      } catch (error) {
+        console.error('更新聯絡表單資料 API 呼叫出錯:', error)
+      }
     }
     if (!totalQuantity.value) {
       const store = useStore()
