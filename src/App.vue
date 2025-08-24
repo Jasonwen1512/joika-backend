@@ -124,7 +124,7 @@ const store = useStore()
                   </div>
                 </div>
 
-                <!-- 第二個：活動留言檢舉 -->
+                <!-- 第二個：文章留言檢舉 -->
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="headingTwo">
                     <button
@@ -135,7 +135,7 @@ const store = useStore()
                       aria-expanded="false"
                       aria-controls="collapseTwo"
                     >
-                      活動留言檢舉
+                      文章留言檢舉
                       <span class="amount" v-if="update.updatePostReports.length">{{
                         update.updatePostReports.length
                       }}</span>
@@ -155,6 +155,7 @@ const store = useStore()
                               <th>NO</th>
                               <th>檢舉時間</th>
                               <th>檢舉原因</th>
+                              <th>文章留言內容</th>
                               <th>檢舉說明</th>
                               <th>檢舉人姓名</th>
                               <th>狀態</th>
@@ -166,6 +167,15 @@ const store = useStore()
                               <td>{{ item.id }}</td>
                               <td>{{ item.createdAt }}</td>
                               <td>{{ item.reason }}</td>
+                              <td>
+                                <textarea
+                                  name=""
+                                  id=""
+                                  readonly
+                                  class="reply-content form-control"
+                                  >{{ item.comment_content }}</textarea
+                                >
+                              </td>
                               <td>{{ item.description }}</td>
                               <td>{{ item.reporterName }}</td>
                               <td>
@@ -201,7 +211,7 @@ const store = useStore()
                   </div>
                 </div>
 
-                <!-- 第三個：文章留言檢舉 -->
+                <!-- 第三個：活動留言檢舉 -->
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="headingThree">
                     <button
@@ -212,7 +222,7 @@ const store = useStore()
                       aria-expanded="false"
                       aria-controls="collapseThree"
                     >
-                      文章留言檢舉
+                      活動留言檢舉
                       <span class="amount" v-if="update.updateActivityCommentReports.length">{{
                         update.updateActivityCommentReports.length
                       }}</span>
@@ -232,6 +242,7 @@ const store = useStore()
                               <th>NO</th>
                               <th>檢舉時間</th>
                               <th>檢舉原因</th>
+                              <th>活動留言內容</th>
                               <th>檢舉說明</th>
                               <th>檢舉人姓名</th>
                               <th>狀態</th>
@@ -246,6 +257,15 @@ const store = useStore()
                               <td>{{ item.id }}</td>
                               <td>{{ item.createdAt }}</td>
                               <td>{{ item.reason }}</td>
+                              <td>
+                                <textarea
+                                  name=""
+                                  id=""
+                                  readonly
+                                  class="reply-content form-control"
+                                  >{{ item.comment_content }}</textarea
+                                >
+                              </td>
                               <td>{{ item.description }}</td>
                               <td>{{ item.reporterName }}</td>
                               <td>

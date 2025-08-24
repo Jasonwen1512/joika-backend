@@ -103,6 +103,7 @@ export const useStore = defineStore('data', () => {
       reporterName: r.REPORTER_NAME,
       status: r.REPORT_STATUS,
       admin: r.ADMIN_NAME ?? null,
+      comment_content: r.COMMENT_CONTENT,
     }))
   }
 
@@ -118,6 +119,7 @@ export const useStore = defineStore('data', () => {
       reporterName: r.REPORTER_NAME,
       status: r.REPORT_STATUS,
       admin: r.ADMIN_NAME ?? null,
+      comment_content: r.COMMENT_CONTENT,
     }))
   }
 

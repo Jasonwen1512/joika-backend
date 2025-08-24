@@ -36,6 +36,7 @@ const reports = computed(() => {
           reporterName: r.REPORTER_NAME,
           status: r.REPORT_STATUS,
           admin: r.ADMIN_NAME ?? null,
+          comment_content: r.COMMENT_CONTENT,
         }
       )
     })
@@ -57,6 +58,7 @@ const reports = computed(() => {
           reporterName: r.REPORTER_NAME,
           status: r.REPORT_STATUS,
           admin: r.ADMIN_NAME ?? null,
+          comment_content: r.COMMENT_CONTENT,
         }
       )
     })
@@ -76,6 +78,7 @@ const changeData = (data) => {
       reporterName: r.REPORTER_NAME,
       status: r.REPORT_STATUS,
       admin: r.ADMIN_NAME ?? null,
+      comment_content: r.COMMENT_CONTENT,
     }))
   } else if (data === 'activityCommentReports') {
     copyActivityComment = store.activityCommentReports.map((r) => ({
@@ -86,6 +89,7 @@ const changeData = (data) => {
       reporterName: r.REPORTER_NAME,
       status: r.REPORT_STATUS,
       admin: r.ADMIN_NAME ?? null,
+      comment_content: r.COMMENT_CONTENT,
     }))
   }
 }
@@ -116,6 +120,7 @@ const pushUpdateData = (m, c) => {
         reporterName: m.reporterName,
         status: m.status,
         admin: m.status !== '待審核' ? auth.currentUser : null,
+        comment_content: m.comment_content,
       })
     }
   }
@@ -141,6 +146,7 @@ const pushUpdateData = (m, c) => {
         reporterName: m.reporterName,
         status: m.status,
         admin: m.status !== '待審核' ? auth.currentUser : null,
+        comment_content: m.comment_content,
       })
     }
   }
@@ -161,6 +167,8 @@ const pushUpdateData = (m, c) => {
                     <th>NO</th>
                     <th>檢舉時間</th>
                     <th>檢舉原因</th>
+                    <th v-if="store.currentType === 'postReports'">文章留言內容</th>
+                    <th v-else>活動留言內容</th>
                     <th>檢舉說明</th>
                     <th>檢舉人姓名</th>
                     <th>狀態</th>
@@ -172,6 +180,11 @@ const pushUpdateData = (m, c) => {
                     <td>{{ item.id }}</td>
                     <td>{{ item.createdAt }}</td>
                     <td>{{ item.reason }}</td>
+                    <td>
+                      <textarea name="" id="" readonly class="reply-content form-control">{{
+                        item.comment_content
+                      }}</textarea>
+                    </td>
                     <td>{{ item.description }}</td>
                     <td>{{ item.reporterName }}</td>
                     <td>
@@ -207,6 +220,8 @@ const pushUpdateData = (m, c) => {
                     <th>NO</th>
                     <th>檢舉時間</th>
                     <th>檢舉原因</th>
+                    <th v-if="store.currentType === 'postReports'">文章留言內容</th>
+                    <th v-else>活動留言內容</th>
                     <th>檢舉說明</th>
                     <th>檢舉人姓名</th>
                     <th>狀態</th>
@@ -218,6 +233,11 @@ const pushUpdateData = (m, c) => {
                     <td>{{ item.id }}</td>
                     <td>{{ item.createdAt }}</td>
                     <td>{{ item.reason }}</td>
+                    <td>
+                      <textarea name="" id="" readonly class="reply-content form-control">{{
+                        item.comment_content
+                      }}</textarea>
+                    </td>
                     <td>{{ item.description }}</td>
                     <td>{{ item.reporterName }}</td>
                     <td>
