@@ -124,7 +124,7 @@ const store = useStore()
                   </div>
                 </div>
 
-                <!-- 第二個：文章留言檢舉 -->
+                <!-- 第二個：文章檢舉 -->
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="headingTwo">
                     <button
@@ -135,7 +135,7 @@ const store = useStore()
                       aria-expanded="false"
                       aria-controls="collapseTwo"
                     >
-                      文章留言檢舉
+                      文章檢舉
                       <span class="amount" v-if="update.updatePostReports.length">{{
                         update.updatePostReports.length
                       }}</span>
@@ -168,13 +168,20 @@ const store = useStore()
                               <td>{{ item.createdAt }}</td>
                               <td>{{ item.reason }}</td>
                               <td>
-                                <textarea
-                                  name=""
-                                  id=""
-                                  readonly
-                                  class="reply-content form-control"
-                                  >{{ item.comment_content }}</textarea
-                                >
+                                <span v-if="!item.comment_content">
+                                  <span class="title-css">標</span>
+                                  {{ item.post_title }}
+                                </span>
+                                <template v-else>
+                                  <span class="content-css">留</span>
+                                  <textarea
+                                    name=""
+                                    id=""
+                                    readonly
+                                    class="reply-content form-control"
+                                    >{{ item.comment_content }}</textarea
+                                  >
+                                </template>
                               </td>
                               <td>{{ item.description }}</td>
                               <td>{{ item.reporterName }}</td>
@@ -555,5 +562,19 @@ table.table th {
   resize: none; /* 不能拉伸 */
   font: inherit; /* 字型與父元素一致 */
   padding: 0;
+}
+
+.title-css,
+.content-css {
+  padding: 0 4px;
+  border-radius: 4px;
+}
+.title-css {
+  border: 1px solid #2f486b;
+  color: #2f486b;
+}
+.content-css {
+  border: 1px solid #8b0000;
+  color: #8b0000;
 }
 </style>

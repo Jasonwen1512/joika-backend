@@ -37,6 +37,7 @@ const reports = computed(() => {
           status: r.REPORT_STATUS,
           admin: r.ADMIN_NAME ?? null,
           comment_content: r.COMMENT_CONTENT,
+          post_title: r.POST_TITLE,
         }
       )
     })
@@ -79,6 +80,7 @@ const changeData = (data) => {
       status: r.REPORT_STATUS,
       admin: r.ADMIN_NAME ?? null,
       comment_content: r.COMMENT_CONTENT,
+      post_title: r.POST_TITLE,
     }))
   } else if (data === 'activityCommentReports') {
     copyActivityComment = store.activityCommentReports.map((r) => ({
@@ -121,6 +123,7 @@ const pushUpdateData = (m, c) => {
         status: m.status,
         admin: m.status !== '待審核' ? auth.currentUser : null,
         comment_content: m.comment_content,
+        post_title: m.post_title,
       })
     }
   }
@@ -167,7 +170,7 @@ const pushUpdateData = (m, c) => {
                     <th>NO</th>
                     <th>檢舉時間</th>
                     <th>檢舉原因</th>
-                    <th v-if="store.currentType === 'postReports'">文章留言內容</th>
+                    <th v-if="store.currentType === 'postReports'">文章留言內容 / 文章標題</th>
                     <th v-else>活動留言內容</th>
                     <th>檢舉說明</th>
                     <th>檢舉人姓名</th>
@@ -181,9 +184,18 @@ const pushUpdateData = (m, c) => {
                     <td>{{ item.createdAt }}</td>
                     <td>{{ item.reason }}</td>
                     <td>
-                      <textarea name="" id="" readonly class="reply-content form-control">{{
-                        item.comment_content
-                      }}</textarea>
+                      <span v-if="!item.comment_content">
+                        <span class="title-css">標</span>
+                        {{ item.post_title }}
+                      </span>
+                      <template v-else>
+                        <span class="content-css" v-if="store.currentType === 'postReports'"
+                          >留</span
+                        >
+                        <textarea name="" id="" readonly class="reply-content form-control">{{
+                          item.comment_content
+                        }}</textarea>
+                      </template>
                     </td>
                     <td>{{ item.description }}</td>
                     <td>{{ item.reporterName }}</td>
@@ -220,7 +232,7 @@ const pushUpdateData = (m, c) => {
                     <th>NO</th>
                     <th>檢舉時間</th>
                     <th>檢舉原因</th>
-                    <th v-if="store.currentType === 'postReports'">文章留言內容</th>
+                    <th v-if="store.currentType === 'postReports'">文章留言內容 / 文章標題</th>
                     <th v-else>活動留言內容</th>
                     <th>檢舉說明</th>
                     <th>檢舉人姓名</th>
@@ -234,9 +246,18 @@ const pushUpdateData = (m, c) => {
                     <td>{{ item.createdAt }}</td>
                     <td>{{ item.reason }}</td>
                     <td>
-                      <textarea name="" id="" readonly class="reply-content form-control">{{
-                        item.comment_content
-                      }}</textarea>
+                      <span v-if="!item.comment_content">
+                        <span class="title-css">標</span>
+                        {{ item.post_title }}
+                      </span>
+                      <template v-else>
+                        <span class="content-css" v-if="store.currentType === 'postReports'"
+                          >留</span
+                        >
+                        <textarea name="" id="" readonly class="reply-content form-control">{{
+                          item.comment_content
+                        }}</textarea>
+                      </template>
                     </td>
                     <td>{{ item.description }}</td>
                     <td>{{ item.reporterName }}</td>
@@ -272,7 +293,7 @@ const pushUpdateData = (m, c) => {
           :class="{ active: store.currentType === 'postReports' }"
           @click="changeData('postReports')"
         >
-          文章留言檢舉
+          文章檢舉
         </button>
         <button
           class="comment"

@@ -104,6 +104,7 @@ export const useStore = defineStore('data', () => {
       status: r.REPORT_STATUS,
       admin: r.ADMIN_NAME ?? null,
       comment_content: r.COMMENT_CONTENT,
+      post_title: r.POST_TITLE,
     }))
   }
 
@@ -146,6 +147,8 @@ export const useStore = defineStore('data', () => {
       reporterName: r.REPORTER_NAME,
       status: r.REPORT_STATUS,
       admin: r.ADMIN_NAME ?? null,
+      comment_content: r.COMMENT_CONTENT,
+      post_title: r.POST_TITLE,
     }))
 
     copyActivityCommentReports.value = activityCommentReports.value.map((r) => ({
@@ -156,6 +159,7 @@ export const useStore = defineStore('data', () => {
       reporterName: r.REPORTER_NAME,
       status: r.REPORT_STATUS,
       admin: r.ADMIN_NAME ?? null,
+      comment_content: r.COMMENT_CONTENT,
     }))
 
     copyContacts.value = JSON.parse(JSON.stringify(contacts.value))
