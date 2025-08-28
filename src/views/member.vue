@@ -79,89 +79,93 @@ const pushUpdateData = (m, c) => {
         <!-- 全部會員 -->
         <template #tab-0>
           <div class="pt-3">
-            <table class="member-table table table-striped">
-              <thead>
-                <tr>
-                  <th>NO</th>
-                  <th>註冊日期</th>
-                  <th>姓名</th>
-                  <th>信箱</th>
-                  <th>手機號碼</th>
-                  <th>性別</th>
-                  <th>會員狀態</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(item, index) in members" :key="item.MEMBER_ID">
-                  <td>{{ item.MEMBER_ID }}</td>
-                  <td>{{ item.REGISTRATION_DATE }}</td>
-                  <td>{{ item.MEMBER_NAME }}</td>
-                  <td>{{ item.MEMBER_EMAIL }}</td>
-                  <td>{{ item.MEMBER_PHONE }}</td>
+            <div class="table-wrapper">
+              <table class="member-table table table-striped">
+                <thead>
+                  <tr>
+                    <th>NO</th>
+                    <th>註冊日期</th>
+                    <th>姓名</th>
+                    <th>信箱</th>
+                    <th>手機號碼</th>
+                    <th>性別</th>
+                    <th>會員狀態</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in members" :key="item.MEMBER_ID">
+                    <td>{{ item.MEMBER_ID }}</td>
+                    <td>{{ item.REGISTRATION_DATE }}</td>
+                    <td>{{ item.MEMBER_NAME }}</td>
+                    <td>{{ item.MEMBER_EMAIL }}</td>
+                    <td>{{ item.MEMBER_PHONE }}</td>
 
-                  <td>{{ item.MEMBER_GENDER }}</td>
-                  <td>
-                    <select
-                      v-model="item.MEMBER_STATUS"
-                      @change="
-                        pushUpdateData(
-                          item,
-                          copy.find((c) => c.MEMBER_ID === item.MEMBER_ID),
-                        )
-                      "
-                    >
-                      <option value="已停權">已停權</option>
-                      <option value="已通過">已通過</option>
-                      <option value="待審核">待審核</option>
-                    </select>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    <td>{{ item.MEMBER_GENDER }}</td>
+                    <td>
+                      <select
+                        v-model="item.MEMBER_STATUS"
+                        @change="
+                          pushUpdateData(
+                            item,
+                            copy.find((c) => c.MEMBER_ID === item.MEMBER_ID),
+                          )
+                        "
+                      >
+                        <option value="已停權">已停權</option>
+                        <option value="已通過">已通過</option>
+                        <option value="待審核">待審核</option>
+                      </select>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </template>
 
         <!-- 待審核會員 -->
         <template #tab-1>
           <div class="pt-3" v-if="pendingMembers.length">
-            <table class="member-table table table-striped">
-              <thead>
-                <tr>
-                  <th>NO</th>
-                  <th>註冊日期</th>
-                  <th>姓名</th>
-                  <th>信箱</th>
-                  <th>手機號碼</th>
-                  <th>性別</th>
-                  <th>會員狀態</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(item, index) in pendingMembers" :key="item.MEMBER_ID">
-                  <td>{{ item.MEMBER_ID }}</td>
-                  <td>{{ item.REGISTRATION_DATE }}</td>
-                  <td>{{ item.MEMBER_NAME }}</td>
-                  <td>{{ item.MEMBER_EMAIL }}</td>
-                  <td>{{ item.MEMBER_PHONE }}</td>
-                  <td>{{ item.MEMBER_GENDER }}</td>
-                  <td>
-                    <select
-                      v-model="item.MEMBER_STATUS"
-                      @change="
-                        pushUpdateData(
-                          item,
-                          copy.find((c) => c.MEMBER_ID === item.MEMBER_ID),
-                        )
-                      "
-                    >
-                      <option value="已停權">已停權</option>
-                      <option value="已通過">已通過</option>
-                      <option value="待審核">待審核</option>
-                    </select>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="table-wrapper">
+              <table class="member-table table table-striped">
+                <thead>
+                  <tr>
+                    <th>NO</th>
+                    <th>註冊日期</th>
+                    <th>姓名</th>
+                    <th>信箱</th>
+                    <th>手機號碼</th>
+                    <th>性別</th>
+                    <th>會員狀態</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in pendingMembers" :key="item.MEMBER_ID">
+                    <td>{{ item.MEMBER_ID }}</td>
+                    <td>{{ item.REGISTRATION_DATE }}</td>
+                    <td>{{ item.MEMBER_NAME }}</td>
+                    <td>{{ item.MEMBER_EMAIL }}</td>
+                    <td>{{ item.MEMBER_PHONE }}</td>
+                    <td>{{ item.MEMBER_GENDER }}</td>
+                    <td>
+                      <select
+                        v-model="item.MEMBER_STATUS"
+                        @change="
+                          pushUpdateData(
+                            item,
+                            copy.find((c) => c.MEMBER_ID === item.MEMBER_ID),
+                          )
+                        "
+                      >
+                        <option value="已停權">已停權</option>
+                        <option value="已通過">已通過</option>
+                        <option value="待審核">待審核</option>
+                      </select>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
           <div class="text-center text-secondary my-3" v-else>沒有資料</div>
         </template>
